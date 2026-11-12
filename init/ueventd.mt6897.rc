@@ -129,3 +129,13 @@
 #elliptic sensor
 /dev/elliptic0            0644   system     system
 /dev/elliptic1            0644   system     system
+
+# Rules present in stock vendor/etc/ueventd.rc and missing here
+/dev/ccu*                 0660   system     camera
+/dev/mtk_aov              0660   camera     system
+/dev/stpwmt               0660   system     system
+/dev/wmtdetect            0660   system     system
+/dev/fw_log_wmt           0660   system     system
+/dev/btif                 0600   system     system
+/dev/stpant               0660   system     system
+/dev/touch                0660   root       system

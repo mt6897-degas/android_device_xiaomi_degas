@@ -1,0 +1,126 @@
+diff --git a/core/res/res/values/config.xml b/core/res/res/values/config.xml
+index 5f42e4356..c0a95775e 100644
+--- a/core/res/res/values/config.xml
++++ b/core/res/res/values/config.xml
+@@ -3443,6 +3443,12 @@
+     <!-- When true, udfps vote is ignored. This feature is disabled by default. -->
+     <bool name="config_ignoreUdfpsVote">false</bool>
+ 
++    <!-- Refresh rate, in Hz, to hold for the whole time the UDFPS overlay is shown, instead of
++         voting for the highest refresh rate on every touch. For panels whose local HBM runs at
++         a fixed rate and which flash when the display mode changes while it is lit. 0 keeps the
++         default per-touch vote for the highest refresh rate. -->
++    <integer name="config_udfpsRefreshRate">0</integer>
++
+     <!-- Controls if local secondary displays should be private or not. Value specified in the array
+          represents physical port address of each display and display in this list will be marked
+          as private. {@see android.view.Display#FLAG_PRIVATE} -->
+diff --git a/core/res/res/values/symbols.xml b/core/res/res/values/symbols.xml
+index a7272ec70..d0e7bd13c 100644
+--- a/core/res/res/values/symbols.xml
++++ b/core/res/res/values/symbols.xml
+@@ -448,6 +448,7 @@
+   <java-symbol type="bool" name="config_localDisplaysMirrorContent" />
+   <java-symbol type="bool" name="config_allowPresentationOnInternalDisplay" />
+   <java-symbol type="bool" name="config_ignoreUdfpsVote" />
++  <java-symbol type="integer" name="config_udfpsRefreshRate" />
+   <java-symbol type="bool" name="config_enableProximityService" />
+   <java-symbol type="bool" name="config_enableVirtualDeviceManager" />
+   <java-symbol type="array" name="config_localPrivateDisplayPorts" />
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
+index 85584d1fc..c7b582bb5 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
+@@ -198,6 +198,10 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+     @NonNull private final SelectedUserInteractor mSelectedUserInteractor;
+     @NonNull private final MSDLPlayer mMsdlPlayer;
+     private final boolean mIgnoreRefreshRate;
++    // Hold the UDFPS refresh rate vote for the whole time the overlay is shown rather than per
++    // touch (config_udfpsRefreshRate), so the display mode never changes under a lit sensor.
++    private final boolean mHoldRefreshRateWhileShown;
++    private boolean mRefreshRateHeld;
+     private final KeyguardTransitionInteractor mKeyguardTransitionInteractor;
+     @NonNull private final AuthController mAuthController;
+ 
+@@ -746,6 +750,8 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+         mUserActivityNotifier = userActivityNotifier;
+         mIgnoreRefreshRate = mContext.getResources()
+                     .getBoolean(R.bool.config_ignoreUdfpsVote);
++        mHoldRefreshRateWhileShown = !mIgnoreRefreshRate && mContext.getResources()
++                    .getInteger(R.integer.config_udfpsRefreshRate) > 0;
+         // The fingerprint manager is queried for UDFPS before this class is constructed, so the
+         // fingerprint manager should never be null.
+         mFingerprintManager = checkNotNull(fingerprintManager);
+@@ -896,6 +902,10 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+             mOnFingerDown = false;
+             mAttemptedToDismissKeyguard = false;
+             mOrientationListener.enable();
++            if (mHoldRefreshRateWhileShown && mUdfpsDisplayMode != null && isOptical()) {
++                mUdfpsDisplayMode.enable(() -> { });
++                mRefreshRateHeld = true;
++            }
+             
+             if (mFingerprintManager != null) {
+                 mFingerprintManager.onUdfpsUiEvent(FingerprintManager.UDFPS_UI_OVERLAY_SHOWN,
+@@ -925,6 +935,10 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+             }
+ 
+             final boolean removed = mOverlay.hide();
++            if (mRefreshRateHeld) {
++                mUdfpsDisplayMode.disable(() -> { });
++                mRefreshRateHeld = false;
++            }
+             mUdfpsOverlayInteractor.setFingerDown(false);
+             mKeyguardViewManager.hideAlternateBouncer(true);
+             Log.v(TAG, "hideUdfpsOverlay | removing window: " + removed);
+@@ -1174,7 +1188,7 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+ 
+         final View view = mOverlay.getTouchOverlay();
+         if (isOptical() && view instanceof UdfpsTouchOverlay udfpsView) {
+-            if (mIgnoreRefreshRate) {
++            if (mIgnoreRefreshRate || mHoldRefreshRateWhileShown) {
+                 dispatchOnUiReady(requestId);
+             } else {
+                 udfpsView.configureDisplay(() -> dispatchOnUiReady(requestId));
+diff --git a/services/core/java/com/android/server/display/mode/DisplayModeDirector.java b/services/core/java/com/android/server/display/mode/DisplayModeDirector.java
+index b14448356..19be4cacc 100644
+--- a/services/core/java/com/android/server/display/mode/DisplayModeDirector.java
++++ b/services/core/java/com/android/server/display/mode/DisplayModeDirector.java
+@@ -2810,14 +2810,35 @@ public class DisplayModeDirector {
+         private void updateVoteLocked(int displayId, boolean enabled, int votePriority) {
+             final Vote vote;
+             if (enabled) {
+-                float maxRefreshRate = DisplayModeDirector.this.getMaxRefreshRateLocked(displayId);
+-                vote = Vote.forPhysicalRefreshRates(maxRefreshRate, maxRefreshRate);
++                float refreshRate = votePriority == Vote.PRIORITY_UDFPS
++                        ? getUdfpsRefreshRateLocked(displayId)
++                        : DisplayModeDirector.this.getMaxRefreshRateLocked(displayId);
++                vote = Vote.forPhysicalRefreshRates(refreshRate, refreshRate);
+             } else {
+                 vote = null;
+             }
+             mVotesStorage.updateVote(displayId, votePriority, vote);
+         }
+ 
++        /**
++         * config_udfpsRefreshRate when the display supports it, otherwise the highest refresh
++         * rate, which is what this vote has always asked for.
++         */
++        @GuardedBy("mLock")
++        private float getUdfpsRefreshRateLocked(int displayId) {
++            final int configured = mContext.getResources()
++                    .getInteger(R.integer.config_udfpsRefreshRate);
++            final Display.Mode[] modes = mSupportedModesByDisplay.get(displayId);
++            if (configured > 0 && modes != null) {
++                for (Display.Mode mode : modes) {
++                    if (Math.abs(mode.getRefreshRate() - configured) < 1f) {
++                        return mode.getRefreshRate();
++                    }
++                }
++            }
++            return DisplayModeDirector.this.getMaxRefreshRateLocked(displayId);
++        }
++
+         @GuardedBy("mLock")
+         void dumpLocked(PrintWriter pw) {
+             pw.println("  UdfpsObserver");

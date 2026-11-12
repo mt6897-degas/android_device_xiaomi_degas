@@ -10,6 +10,44 @@ LineageOS device tree for the Xiaomi 14T, codename `degas`
 | Display   | 6.67" AMOLED, 1220x2712, 144 Hz   |
 | Android   | LineageOS 23 (based on stock Android 16, OS3.0.4.0.WNEMIXM) |
 
+## AxionOS 2.9
+
+Branch `axion-2.9` is this tree as used for an AxionOS 2.9 (lineage-23.2)
+build. Touch, Wi-Fi and Bluetooth work on a Xiaomi 14T. The camera change in
+the last commit is built but not tested on a phone yet.
+
+```sh
+repo init -u https://github.com/AxionAOSP/android.git -b lineage-23.2 --git-lfs
+git clone -b axion-2.9 https://github.com/saiquer/device-tree-xiaomi-degas device/xiaomi/degas
+mkdir -p .repo/local_manifests
+cp device/xiaomi/degas/axion/degas.xml .repo/local_manifests/
+repo sync
+```
+
+Then:
+
+1. Generate `vendor/xiaomi/degas` as described under "Vendor blobs" below.
+2. Apply the patches as described in [`patches/README.md`](patches/README.md).
+   For `frameworks/base`, use
+   `axion/patches/frameworks_base-0003-udfps-hold-refresh-rate.patch` in place
+   of `patches/frameworks_base/0003-*`: same change, rebased on the AxionOS
+   source.
+3. Take the firmware out of the generated vendor makefiles: the
+   `add-radio-file` lines in `vendor/xiaomi/degas/Android.mk` and the
+   `AB_OTA_PARTITIONS` block in `vendor/xiaomi/degas/BoardConfigVendor.mk`.
+   The zip then updates the 14 Android partitions only; lk, preloader and the
+   other firmware on the phone stay as they are. `axion/build.sh` stops if
+   those lines are still there.
+4. Build. The script expects the source in `<workspace>/axion-23.2`:
+
+   ```sh
+   bash device/xiaomi/degas/axion/build.sh <workspace> pico   # or core, gms, vanilla
+   ```
+
+`lineage_degas.mk` turns adb on without authorisation (`WITH_ADB_INSECURE`,
+`persist.sys.ax_debug_enabled`) for test builds. Remove both lines for a build
+you use daily.
+
 ## Building
 
 Add [`degas.xml`](degas.xml) to `.repo/local_manifests/` of a LineageOS 23.2

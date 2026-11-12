@@ -26,3 +26,9 @@ service conninfra_loader /vendor/bin/conninfra_loader
     user system
     group system
     oneshot
+
+# Wi-Fi NVRAM helper (stock vendor/etc/init/wlan_assistant.rc)
+service wlan_assistant /vendor/bin/wlan_assistant
+    class main
+    user wifi
+    group system gps inet

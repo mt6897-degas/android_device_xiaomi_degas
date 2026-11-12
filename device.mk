@@ -277,13 +277,13 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     xiaomi-telephony-stub
 
+# mediatek-telephony-common and mediatek-telecom-common are put on the
+# bootclasspath by hardware/mediatek/frameworks/mediatek-frameworks.mk.
 PRODUCT_BOOT_JARS += \
     xiaomi-telephony-stub \
     mediatek-telephony-base \
-    mediatek-telephony-common \
     mediatek-ims-common \
-    mediatek-ims-base \
-    mediatek-telecom-common
+    mediatek-ims-base
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/permissions/privapp-permissions-com.mediatek.ims.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-com.mediatek.ims.xml \

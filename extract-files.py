@@ -33,6 +33,19 @@ lib_fixups: lib_fixups_user_type = {
      'vendor.mediatek.hardware.apuware.utils-V1-ndk',
      'vendor.mediatek.hardware.apuware.utils@2.0',
      'vendor.mediatek.hardware.videotelephony-V1-ndk'): lib_fixup_vendor_suffix,
+    # Also shipped by odm or system_ext under the same name;
+    # the vendor copy is NAME-vendor (see proprietary-files.txt).
+    ('libHISCppAlgos',
+     'libcameraopt',
+     'libcom.xiaomi.hwadapter.decoupleutil',
+     'libcom.xiaomi.hwadapter.postprocinterface',
+     'libhis_face_tracking',
+     'libhis_motion_tracker',
+     'libmialgo_aio_seg',
+     'libmialgo_utils',
+     'libremosaic_wrapper',
+     'vendor.mediatek.hardware.mbrain-V2-ndk',
+     'vendor.mediatek.hardware.pq_aidl-V7-ndk'): lib_fixup_vendor_suffix,
 }
 
 
@@ -177,6 +190,13 @@ blob_fixups: blob_fixups_user_type = {
     'odm/bin/hw/vendor.xiaomi.sensor.citsensorservice.aidl': blob_fixup()
         .replace_needed('libtinyxml2.so', 'libtinyxml2-v34.so')
         .replace_needed('libui.so', 'libui-v34.so'),
+
+    # Stock names this jar androidx.camera.extensions.impl.jar. It is installed
+    # as ...impl.xiaomi.jar (see proprietary-files.txt) so it cannot collide with
+    # the AOSP sample module of the same name; point the permission XML at it.
+    'vendor/etc/permissions/camera_extensions.xml': blob_fixup()
+        .regex_replace(r'/androidx\.camera\.extensions\.impl\.jar',
+                       '/androidx.camera.extensions.impl.xiaomi.jar'),
 }  # fmt: skip
 
 module = ExtractUtilsModule(

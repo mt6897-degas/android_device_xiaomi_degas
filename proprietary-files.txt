@@ -256,7 +256,7 @@ vendor/lib64/lib3a.ae.pipe.so
 vendor/lib64/lib3a.custom.shading.flow.so
 vendor/lib64/libAF.so
 vendor/lib64/libBasicModule.so
-vendor/lib64/libHISCppAlgos.so
+vendor/lib64/libHISCppAlgos.so;MODULE_SUFFIX=-vendor
 vendor/lib64/libJpgEncPipe.so
 vendor/lib64/libMiMotion.so
 vendor/lib64/libMiPhotoFilter.so
@@ -264,8 +264,8 @@ vendor/lib64/libOpenCL.so
 vendor/lib64/libSQLiteModule_VER_ALL.so
 vendor/lib64/libXMFaceFocus.so
 vendor/lib64/libaaa_aaautil.so
-vendor/lib64/libaaa_afassist_V2.so
-vendor/lib64/libaaa_afassistctrl.so
+vendor/lib64/libaaa_afassist_V2.so;DISABLE_CHECKELF
+vendor/lib64/libaaa_afassistctrl.so;DISABLE_CHECKELF
 vendor/lib64/libaaa_gma.so
 vendor/lib64/libaimemc.so
 vendor/lib64/libaispq.so
@@ -296,8 +296,8 @@ vendor/lib64/libfeature.hdr10.so
 vendor/lib64/libfeaturepolicy.so
 vendor/lib64/libgz_uree.so
 vendor/lib64/libheichal.so
-vendor/lib64/libhis_face_tracking.so
-vendor/lib64/libhis_motion_tracker.so
+vendor/lib64/libhis_face_tracking.so;MODULE_SUFFIX=-vendor
+vendor/lib64/libhis_motion_tracker.so;MODULE_SUFFIX=-vendor
 vendor/lib64/libimagebuffer_wrapper.so
 vendor/lib64/libjpeg-alpha-oal_vendor.so
 vendor/lib64/libjpeg-alpha_vendor.so
@@ -326,7 +326,7 @@ vendor/lib64/libmtkisp_metadata_v3.so
 vendor/lib64/libmvpu_wrapper.so
 vendor/lib64/libn3d_tuning.so
 vendor/lib64/librelight_only.so
-vendor/lib64/libremosaic_wrapper.so
+vendor/lib64/libremosaic_wrapper.so;MODULE_SUFFIX=-vendor
 vendor/lib64/libultrahdr.so:vendor/lib64/libultrahdr-v34.so;FIX_SONAME
 vendor/lib64/libvideoBokeh.so
 vendor/lib64/mt6897/degasimx906wide_mipi_raw_IdxMgr.so;SYMLINK=vendor/lib64/degasimx906wide_mipi_raw_IdxMgr.so
@@ -1484,7 +1484,9 @@ vendor/firmware/aw8697_rtp_1.bin
 # Wifi
 vendor/bin/wlan_assistant
 vendor/etc/init/init.wlan_drv.rc
-vendor/etc/init/wlan_assistant.rc
+# Installed by hardware/mediatek/wlan/wlan_assistant (init_rc); the stock
+# copy would be a second rule for the same file.
+# vendor/etc/init/wlan_assistant.rc
 vendor/etc/wifi/p2p_supplicant_overlay.conf
 vendor/etc/wifi/wpa_supplicant.conf
 vendor/etc/wifi/wpa_supplicant_overlay.conf
@@ -2039,18 +2041,18 @@ odm/etc/camera/xiaomi/watermark/ic_wp_zhang_jia_jie.webp
 odm/etc/camera/xiaomi/watermark/noise_logo.png
 
 # Camera DataSet (degas sensor tuning DBs)
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/default_sensor/mt6897/ISP_mapping.db
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/default_sensor/mt6897/ISP_param.db
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasimx906wide_mipi_raw/mt6897/ISP_mapping.db
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasimx906wide_mipi_raw/mt6897/ISP_param.db
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasov13b10ultra_mipi_raw/mt6897/ISP_mapping.db
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasov13b10ultra_mipi_raw/mt6897/ISP_param.db
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kjn1tele_mipi_raw/mt6897/ISP_mapping.db
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kjn1tele_mipi_raw/mt6897/ISP_param.db
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kkd1front_mipi_raw/mt6897/ISP_mapping.db
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kkd1front_mipi_raw/mt6897/ISP_param.db
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB_aov/default_sensor/mt6897/ISP_mapping.db
-odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB_aov/default_sensor/mt6897/ISP_param.db
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/default_sensor/mt6897/ISP_mapping.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/default_sensor/ISP_mapping.db;MAKE_COPY_RULE_ONLY
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/default_sensor/mt6897/ISP_param.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/default_sensor/ISP_param.db;MAKE_COPY_RULE_ONLY
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasimx906wide_mipi_raw/mt6897/ISP_mapping.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasimx906wide_mipi_raw/ISP_mapping.db;MAKE_COPY_RULE_ONLY
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasimx906wide_mipi_raw/mt6897/ISP_param.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasimx906wide_mipi_raw/ISP_param.db;MAKE_COPY_RULE_ONLY
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasov13b10ultra_mipi_raw/mt6897/ISP_mapping.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasov13b10ultra_mipi_raw/ISP_mapping.db;MAKE_COPY_RULE_ONLY
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasov13b10ultra_mipi_raw/mt6897/ISP_param.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degasov13b10ultra_mipi_raw/ISP_param.db;MAKE_COPY_RULE_ONLY
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kjn1tele_mipi_raw/mt6897/ISP_mapping.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kjn1tele_mipi_raw/ISP_mapping.db;MAKE_COPY_RULE_ONLY
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kjn1tele_mipi_raw/mt6897/ISP_param.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kjn1tele_mipi_raw/ISP_param.db;MAKE_COPY_RULE_ONLY
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kkd1front_mipi_raw/mt6897/ISP_mapping.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kkd1front_mipi_raw/ISP_mapping.db;MAKE_COPY_RULE_ONLY
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kkd1front_mipi_raw/mt6897/ISP_param.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB/degass5kkd1front_mipi_raw/ISP_param.db;MAKE_COPY_RULE_ONLY
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB_aov/default_sensor/mt6897/ISP_mapping.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB_aov/default_sensor/ISP_mapping.db;MAKE_COPY_RULE_ONLY
+odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB_aov/default_sensor/mt6897/ISP_param.db;SYMLINK=odm/bin/crossbuild/DataSet/SQLiteModule/db/tuning_DB_aov/default_sensor/ISP_param.db;MAKE_COPY_RULE_ONLY
 
 # Camera libs/plugins
 odm/lib64/camera/plugins/com.xiaomi.plugin.arcrawhdr.so
@@ -3049,7 +3051,7 @@ odm/etc/touch/dynamicrate.json
 odm/etc/touch/gameturbotool-control.json
 odm/etc/touch/gameturbotool.json
 odm/lib/libadaptivehdr.so
-odm/lib64/libAncHumanVideoBokehV4.so
+odm/lib64/libAncHumanVideoBokehV4.so;DISABLE_CHECKELF
 odm/lib64/libadaptivehdr.so
 odm/lib64/libanc_dc_base.so
 odm/lib64/libanc_single_bokeh.so
@@ -3093,9 +3095,11 @@ odm/lib64/librfs_warp.so
 odm/lib64/libtensorflowlite_touch_c.so
 odm/lib64/libtouchreport.so
 odm/lib64/libtouchsensor.so
-odm/lib64/libwa_widelens_undistort.so
+odm/lib64/libwa_widelens_undistort.so;DISABLE_CHECKELF
 odm/lib64/temp/libcom.xiaomi.hwadapter.decoupleutil.so
 odm/lib64/temp/libcom.xiaomi.hwadapter.postprocinterface.so
+odm/lib64/temp/mt6897/libmtkcam.atmseventmgr.so;SYMLINK=odm/lib64/temp/libmtkcam.atmseventmgr.so;MAKE_COPY_RULE_ONLY
+odm/lib64/temp/mt6897/libmtkcam_metadata.so;SYMLINK=odm/lib64/temp/libmtkcam_metadata.so;MAKE_COPY_RULE_ONLY
 system_ext/lib/vendor.mediatek.hardware.audio-V1-ndk.so
 system_ext/lib/vendor.mediatek.hardware.mbrain-V2-ndk.so
 system_ext/lib/vendor.mediatek.hardware.pq_aidl-V7-ndk.so
@@ -3126,7 +3130,7 @@ vendor/etc/thermalbreakboostconfig.xml
 vendor/lib64/libHardwareBacklightcore.so
 vendor/lib64/libIntelligentFocus.so
 vendor/lib64/libSEGModel.so
-vendor/lib64/libcameraopt.so
+vendor/lib64/libcameraopt.so;MODULE_SUFFIX=-vendor
 vendor/lib64/libcodec2_vpp_frc_plugin.so
 vendor/lib64/libcom.xiaomi.attribute.so
 vendor/lib64/libcom.xiaomi.ecoenginemonitor.so
@@ -3139,11 +3143,11 @@ vendor/lib64/libmicamera_aidl_device.so
 vendor/lib64/libmicamera_aidl_provider.so
 vendor/lib64/libmicamera_aidl_utils.so
 vendor/lib64/libmicamera_hal_core.so
-odm/lib64/libMiVideoFilter.so
+odm/lib64/libMiVideoFilter.so;DISABLE_CHECKELF
 vendor/lib64/camera/libzslselectorpool.so
-vendor/lib64/libmcve.so
-vendor/lib64/libmialgo_aio_seg.so
-vendor/lib64/libmialgo_utils.so
+vendor/lib64/libmcve.so;DISABLE_CHECKELF
+vendor/lib64/libmialgo_aio_seg.so;MODULE_SUFFIX=-vendor
+vendor/lib64/libmialgo_utils.so;MODULE_SUFFIX=-vendor
 vendor/lib64/libmialgoengine_custom.so
 vendor/lib64/libecoengine.so
 vendor/lib64/libmtkcam_hal_custom_state.so
@@ -3154,8 +3158,8 @@ vendor/lib64/libopencv_imgproc.so
 vendor/lib64/librendercore.so
 vendor/lib64/vendor.mediatek.hardware.apuware.apusys-V3-ndk.so
 vendor/lib64/vendor.mediatek.hardware.camera.aovservice-V3-ndk.so
-vendor/lib64/vendor.mediatek.hardware.mbrain-V2-ndk.so
-vendor/lib64/vendor.mediatek.hardware.pq_aidl-V7-ndk.so
+vendor/lib64/vendor.mediatek.hardware.mbrain-V2-ndk.so;MODULE_SUFFIX=-vendor
+vendor/lib64/vendor.mediatek.hardware.pq_aidl-V7-ndk.so;MODULE_SUFFIX=-vendor
 vendor/lib64/vendor.xiaomi.hardware.aidlbgservice-V1-impl.so
 vendor/lib64/vendor.xiaomi.hardware.aidlbgservice-V1-ndk.so
 vendor/lib64/vendor.xiaomi.hardware.bgservice@1.0-impl.so
@@ -3173,15 +3177,18 @@ odm/lib64/libHISCppAlgos.so
 odm/lib64/libhis_face_tracking.so
 odm/lib64/libhis_motion_tracker.so
 vendor/data/model/AIHDR.dla
-vendor/data/model/SR270*480.dla
-vendor/data/model/SR288*640.dla
-vendor/data/model/SR360*640.dla
-vendor/data/model/SR376*896.dla
-vendor/data/model/SR480*864.dla
-vendor/data/model/SR486*864.dla
-vendor/data/model/SR504*896.dla
-vendor/data/model/SR540*960.dla
-vendor/data/model/SR720*1280.dla
+# Not installed: Soong rejects a '*' in a copied path (fsgen: "path may
+# not contain a glob"). These nine super-resolution models need another
+# install route before a complete ROM; vendor_boot does not contain them.
+# vendor/data/model/SR270*480.dla
+# vendor/data/model/SR288*640.dla
+# vendor/data/model/SR360*640.dla
+# vendor/data/model/SR376*896.dla
+# vendor/data/model/SR480*864.dla
+# vendor/data/model/SR486*864.dla
+# vendor/data/model/SR504*896.dla
+# vendor/data/model/SR540*960.dla
+# vendor/data/model/SR720*1280.dla
 vendor/data/model/mimemc_2x_1088p_pre.dla
 vendor/data/model/mimemc_2x_1088p_pro.dla
 vendor/data/model/mimemc_2x_1088p_q0.dla
@@ -3203,6 +3210,6 @@ vendor/etc/bh3.dla
 vendor/etc/genshin.dla
 vendor/etc/init/android.hardware.graphics.allocator-V1-service-mediatek.rc
 vendor/etc/permissions/camera_extensions.xml
-vendor/framework/androidx.camera.extensions.impl.xiaomi.jar
-vendor/lib64/libcom.xiaomi.hwadapter.decoupleutil.so
-vendor/lib64/libcom.xiaomi.hwadapter.postprocinterface.so
+vendor/framework/androidx.camera.extensions.impl.jar:vendor/framework/androidx.camera.extensions.impl.xiaomi.jar
+vendor/lib64/libcom.xiaomi.hwadapter.decoupleutil.so;MODULE_SUFFIX=-vendor
+vendor/lib64/libcom.xiaomi.hwadapter.postprocinterface.so;MODULE_SUFFIX=-vendor
