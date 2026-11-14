@@ -12,9 +12,8 @@ $(call inherit-product, device/xiaomi/degas/device.mk)
 
 # Inherit some common LineageOS stuff.
 TARGET_DISABLE_EPPE := true
-# Test build: adb on from first boot, no authorisation prompt, root shell.
-WITH_ADB_INSECURE := true
-PRODUCT_SYSTEM_EXT_PROPERTIES += persist.sys.ax_debug_enabled=1
+# Shown in Settings > About phone (underscores are displayed as spaces).
+AXION_MAINTAINER := Maintained_by_@saiquer
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
 PRODUCT_BRAND := Xiaomi

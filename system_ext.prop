@@ -34,3 +34,6 @@ ro.mi.os.version.code=3
 ro.mi.os.version.incremental=OS3.0.4.0.WNEMIXM
 ro.miui.build.region=global
 ro.product.marketname=Xiaomi 14T
+
+# MiuiCamera 6.7 is re-signed; skip its own signature self-check
+camera.debug.safe.check.disable=true

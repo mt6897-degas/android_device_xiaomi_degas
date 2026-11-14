@@ -39,7 +39,18 @@ namespace {
 // area only, which is what makes it usable as a press signal.
 constexpr uint16_t kFodKeyCode = 0x152;
 
-constexpr char kTouchDeviceName[] = "goodix_ts";
+// degas ships with a goodix or a focaltech touch controller, depending on the
+// panel supplier. Both report the FOD key on their own input device.
+constexpr const char* kTouchDeviceNames[] = {"goodix_ts", "focaltech_ts"};
+
+static bool isTouchDevice(const char* name) {
+    for (const char* candidate : kTouchDeviceNames) {
+        if (strcmp(name, candidate) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
 constexpr char kInputDir[] = "/dev/input";
 
 // Centre and radius of the sensor, matching
@@ -195,8 +206,7 @@ int UdfpsSensorSubHal::openTouchDevice() {
         }
 
         char name[80] = {};
-        if (ioctl(fd, EVIOCGNAME(sizeof(name) - 1), name) >= 0 &&
-            strcmp(name, kTouchDeviceName) == 0) {
+        if (ioctl(fd, EVIOCGNAME(sizeof(name) - 1), name) >= 0 && isTouchDevice(name)) {
             found = fd;
             break;
         }
@@ -205,7 +215,7 @@ int UdfpsSensorSubHal::openTouchDevice() {
     closedir(dir);
 
     if (found < 0) {
-        ALOGE("no input device named %s", kTouchDeviceName);
+        ALOGE("no goodix_ts or focaltech_ts input device");
     }
     return found;
 }

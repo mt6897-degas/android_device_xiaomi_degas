@@ -99,6 +99,7 @@ ro.hardware.hwcomposer=mtk_common
 ro.hardware.vulkan=mali
 ro.surface_flinger.force_hwc_copy_for_virtual_displays=true
 ro.surface_flinger.game_default_frame_rate_override=60
+ro.surface_flinger.has_HDR_display=true
 ro.surface_flinger.has_wide_color_display=true
 ro.surface_flinger.ignore_hdr_camera_layers=true
 ro.surface_flinger.max_frame_buffer_acquired_buffers=3
@@ -291,7 +292,7 @@ persist.vendor.volte_support=1
 persist.vendor.vonr_setting_support=1
 persist.vendor.wfc.cnop_vowifi=1
 ro.product.mod_device=degas_global
-ro.telephony.default_network=35,35,35,35
+ro.telephony.default_network=32,32,32,32
 ro.telephony.iwlan_operation_mode=AP-assisted
 ro.vendor.md_auto_setup_ims=1
 ro.vendor.mtk_c2k_lte_mode=2
@@ -351,3 +352,6 @@ persist.vendor.sys.fp.fod.optimize=true
 
 # Marketing name (stock)
 ro.product.vendor.marketname=Xiaomi 14T
+
+# MiuiCamera: lets Ultra HD (50 MP) photos be saved in full
+persist.vendor.camera.privapp.list=com.android.camera
