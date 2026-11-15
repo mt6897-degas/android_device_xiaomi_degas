@@ -30,8 +30,25 @@ VENDOR = path.join(
 # takes the boot-time notification shade with it. A re-extract silently
 # restores the stock dex.
 IMS_SERVICE = 'system_ext/priv-app/ImsService/ImsService.apk'
-IMS_PATCHED_DEX_SHA1 = '2e3d60274d53035279019cfebfe1884467997e2e'
+# Reconciled 2026-11-15 against the hash-verified r4 system_ext payload.
+# All 4,872 disassembled classes were compared with exact OS3.0.4.0 stock:
+# only WfcHandler.registerForBroadcast changes behavior (.registers 5 and
+# registerReceiver(..., RECEIVER_EXPORTED)); three omitted static false
+# initializers retain their default values. See notes/STATE.md in the workspace.
+# Do not accept the historical, unavailable 2e3d... build without a new audit.
+IMS_PATCHED_DEX_SHA1 = '23b5d912d4fe689d25a833ef9963429cafcf2ea0'
+IMS_PATCHED_DEX_SHA256 = '7dbbd980366c098303970690be12523020e2a4db786db797251f3721ade0fbfd'
 IMS_STOCK_DEX_SHA1 = '137fa86d1d7a84bf7295b736b157cadae656069a'
+
+
+def classify_ims_dex(dex: bytes) -> str:
+    sha1 = hashlib.sha1(dex).hexdigest()
+    if (sha1 == IMS_PATCHED_DEX_SHA1
+            and hashlib.sha256(dex).hexdigest() == IMS_PATCHED_DEX_SHA256):
+        return 'patched'
+    if sha1 == IMS_STOCK_DEX_SHA1:
+        return 'stock'
+    return 'unknown'
 
 
 def main() -> int:
@@ -41,14 +58,23 @@ def main() -> int:
         print(f'FAIL: {IMS_SERVICE} is missing')
         return 1
 
-    with zipfile.ZipFile(apk) as z:
-        got = hashlib.sha1(z.read('classes.dex')).hexdigest()
+    try:
+        with zipfile.ZipFile(apk) as z:
+            if z.namelist().count('classes.dex') != 1:
+                print(f'FAIL: {IMS_SERVICE} needs exactly one classes.dex')
+                return 1
+            dex = z.read('classes.dex')
+    except (OSError, KeyError, zipfile.BadZipFile) as error:
+        print(f'FAIL: cannot read {IMS_SERVICE}: {type(error).__name__}')
+        return 1
 
-    if got == IMS_PATCHED_DEX_SHA1:
-        print(f'OK: {IMS_SERVICE} still carries the receiver-export patch')
+    got = hashlib.sha1(dex).hexdigest()
+    state = classify_ims_dex(dex)
+    if state == 'patched':
+        print(f'OK: {IMS_SERVICE} still carries the verified r4 receiver-export patch')
         return 0
 
-    if got == IMS_STOCK_DEX_SHA1:
+    if state == 'stock':
         print(
             f'FAIL: {IMS_SERVICE} was reverted to the stock dex by a '
             're-extract.\n'
