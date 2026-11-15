@@ -100,3 +100,8 @@ Use the normal Android OTA tools to generate signed packages. If repacking paylo
 - **[LineageOS](https://github.com/LineageOS)** and **[PixelOS](https://github.com/PixelOS-AOSP)** — ROM sources and common device support.
 
 Original copyright and attribution notices are retained. The PixelOS branch preserves the upstream history together with the adaptation commits. See [LICENSE](LICENSE) and [NOTICE](NOTICE); kernel UAPI headers, stock configuration and proprietary components retain their respective licensing. This is an unofficial PixelOS adaptation.
+
+Charging and face enrollment integration fixes are documented in
+[HYPERCHARGE-FACE.md](patches/HYPERCHARGE-FACE.md). They are checked against the
+pinned stock inputs and matching Settings sources; new hardware results remain
+unverified.
