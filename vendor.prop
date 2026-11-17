@@ -51,6 +51,9 @@ ro.vendor.hdr10plus.enable=1
 ro.vendor.jpeg_decode_sw_opt=2
 ro.vendor.mtk_cam_security_support=1
 
+# Charger
+ro.vendor.mtk_fast_charging_support=1
+
 # Connectivity
 persist.vendor.connsys.chipid=-1
 persist.vendor.connsys.coredump.mode=1
@@ -292,7 +295,7 @@ persist.vendor.volte_support=1
 persist.vendor.vonr_setting_support=1
 persist.vendor.wfc.cnop_vowifi=1
 ro.product.mod_device=degas_global
-ro.telephony.default_network=32,32,32,32
+ro.telephony.default_network=26,26,26,26
 ro.telephony.iwlan_operation_mode=AP-assisted
 ro.vendor.md_auto_setup_ims=1
 ro.vendor.mtk_c2k_lte_mode=2
@@ -302,6 +305,7 @@ ro.vendor.mtk_external_sim_support=1
 ro.vendor.mtk_fd_support=1
 ro.vendor.mtk_gwsd_capability=2
 ro.vendor.mtk_lte_support=1
+ro.vendor.mtk_mcf_support=1
 ro.vendor.mtk_mipc_support=1
 ro.vendor.mtk_mobile_management=1
 ro.vendor.mtk_protocol1_rat_config=N/C/Lf/Lt/W/G
@@ -314,6 +318,7 @@ ro.vendor.mtk_thin_md_telephony_support_mode=0
 ro.vendor.mtk_wappush_support=1
 ro.vendor.mtk_world_phone_policy=0
 ro.vendor.num_md_protocol=2
+ro.vendor.ril.set_sbp_place=0
 ro.vendor.sim_me_lock_mode=3
 ro.vendor.vt_hevc_support=1
 

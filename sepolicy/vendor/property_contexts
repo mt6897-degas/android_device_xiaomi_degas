@@ -1,5 +1,6 @@
 # Batterysecret
 persist.vendor.accelerate.charge               u:object_r:vendor_batterysecret_prop:s0
+persist.vendor.region.charger                  u:object_r:vendor_batterysecret_prop:s0
 
 # Camera
 persist.vendor.camera.                         u:object_r:vendor_mtk_camera_prop:s0
@@ -10,6 +11,7 @@ persist.vendor.dc_backlight.enable             u:object_r:vendor_displayfeature_
 persist.vendor.max.brightness                  u:object_r:vendor_displayfeature_prop:s0
 ro.vendor.cabc.enable                          u:object_r:vendor_displayfeature_prop:s0
 ro.vendor.display.all_modes_support_WCG.enable u:object_r:vendor_displayfeature_prop:s0
+ro.vendor.display.dolbyvision.support          u:object_r:vendor_displayfeature_prop:s0
 ro.vendor.display.update_gray_by_temperature   u:object_r:vendor_displayfeature_prop:s0
 ro.vendor.displayfeature.dump                  u:object_r:vendor_displayfeature_prop:s0
 ro.vendor.histogram.enable                     u:object_r:vendor_displayfeature_prop:s0

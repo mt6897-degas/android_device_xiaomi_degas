@@ -3,11 +3,13 @@ ro.product.camera.livephoto.support=3
 
 # Charger
 persist.vendor.accelerate.charge=true
+persist.vendor.region.charger=GL
 
 # Display
 persist.vendor.dc_backlight.enable=false
 ro.vendor.cabc.enable=false
 ro.vendor.display.all_modes_support_WCG.enable=true
+ro.vendor.display.dolbyvision.support=true
 ro.vendor.display.update_gray_by_temperature=true
 ro.vendor.displayfeature.dump=true
 ro.vendor.histogram.enable=1

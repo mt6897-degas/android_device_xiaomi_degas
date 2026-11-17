@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <carrier_config_list>
+  <!-- mtkfusionrild rejects GSM-less allowed-RAT bitmasks with RIL_E_INVALID_ARGUMENTS (44) -->
+  <carrier_config>
+    <boolean name="prefer_2g_bool" value="true" />
+  </carrier_config>
   <carrier_config mcc="460">
     <boolean name="carrier_volte_available_bool" value="true" />
     <boolean name="carrier_vt_available_bool" value="true" />
@@ -1147,31 +1151,52 @@
     <boolean name="carrier_vt_available_bool" value="true" />
   </carrier_config>
   <!-- Southeast Asia-->
+  <!-- Indonesia default -->
+  <carrier_config mcc="510">
+    <boolean name="prefer_2g_bool" value="true" />
+    <boolean name="carrier_sa_mode_available_bool" value="true" />
+    <boolean name="carrier_disable_sa_mode_bool" value="false" />
+  </carrier_config>
   <!-- ID Smartfren-->
   <carrier_config mcc="510" mnc="09,28">
+    <boolean name="prefer_2g_bool" value="true" />
     <boolean name="carrier_volte_available_bool" value="true" />
     <boolean name="carrier_vt_available_bool" value="true" />
+    <boolean name="carrier_sa_mode_available_bool" value="true" />
+    <boolean name="carrier_disable_sa_mode_bool" value="false" />
   </carrier_config>
   <!-- ID Telkomsel-->
   <carrier_config mcc="510" mnc="10">
+    <boolean name="prefer_2g_bool" value="true" />
     <boolean name="carrier_volte_available_bool" value="true" />
     <boolean name="carrier_wfc_ims_available_bool" value="true" />
     <boolean name="carrier_vt_available_bool" value="true" />
+    <boolean name="carrier_sa_mode_available_bool" value="true" />
+    <boolean name="carrier_disable_sa_mode_bool" value="false" />
   </carrier_config>
   <!-- ID Indosat-->
   <carrier_config mcc="510" mnc="01">
+    <boolean name="prefer_2g_bool" value="true" />
     <boolean name="carrier_volte_available_bool" value="true" />
     <boolean name="carrier_vt_available_bool" value="true" />
+    <boolean name="carrier_sa_mode_available_bool" value="true" />
+    <boolean name="carrier_disable_sa_mode_bool" value="false" />
   </carrier_config>
   <!-- ID XL-->
   <carrier_config mcc="510" mnc="11">
+    <boolean name="prefer_2g_bool" value="true" />
     <boolean name="carrier_volte_available_bool" value="true" />
     <boolean name="carrier_vt_available_bool" value="true" />
+    <boolean name="carrier_sa_mode_available_bool" value="true" />
+    <boolean name="carrier_disable_sa_mode_bool" value="false" />
   </carrier_config>
   <!-- ID Tri-->
   <carrier_config mcc="510" mnc="89">
+    <boolean name="prefer_2g_bool" value="true" />
     <boolean name="carrier_volte_available_bool" value="true" />
     <boolean name="carrier_vt_available_bool" value="true" />
+    <boolean name="carrier_sa_mode_available_bool" value="true" />
+    <boolean name="carrier_disable_sa_mode_bool" value="false" />
   </carrier_config>
   <!-- TH AIS-->
   <carrier_config mcc="520" mnc="03">

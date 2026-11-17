@@ -400,5 +400,7 @@ $(call inherit-product, vendor/xiaomi/degas-dolby/spatial/spatial.mk)
 # Dolby audio effect (stock libraries, DMS service, settings app).
 $(call inherit-product, vendor/xiaomi/degas-dolby/fx/fx.mk)
 
-# Dolby decoders (stock Codec2 audio service).
+# Dolby decoders (stock Codec2 audio and Dolby Vision services).
+DEGAS_DOLBY_VISION := true
+DEGAS_DOLBY_VISION_ABI_REVIEWED := true
 $(call inherit-product, vendor/xiaomi/degas-dolby/codec/codec.mk)

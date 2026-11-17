@@ -15,6 +15,7 @@ import android.os.HandlerThread
 import android.os.IBinder
 import android.os.SystemClock
 import android.os.UserHandle
+import android.provider.Settings
 import android.telephony.AccessNetworkConstants
 import android.telephony.NetworkRegistrationInfo
 import android.telephony.SubscriptionManager
@@ -92,6 +93,7 @@ class ImsHealService : Service() {
         handlerThread = HandlerThread(TAG)
         handlerThread.start()
         handler = Handler(handlerThread.looper)
+        handler.post { healAllowedNetworkTypes() }
         handler.postDelayed(pollRunnable, FIRST_POLL_DELAY_MS)
     }
 
@@ -106,6 +108,8 @@ class ImsHealService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     private fun check() {
+        healAllowedNetworkTypes()
+
         val subId = SubscriptionManager.getDefaultVoiceSubscriptionId()
         if (!SubscriptionManager.isValidSubscriptionId(subId)) {
             reset()
@@ -221,9 +225,97 @@ class ImsHealService : Service() {
         }
     }
 
+    /**
+     * Repairs stale user allowed-RAT bitmasks left in /data by earlier builds
+     * (`ro.telephony.default_network=35` -> `user=0`, or `prefer_2g_bool=false`
+     * GSM-less bitmasks that `mtkfusionrild` rejects with `INVALID_ARGUMENTS`).
+     * Valid user selections on this device (`26`, `9`, `0`, `1`) all include
+     * [RAF_GSM], so this is a no-op once healed.
+     */
+    private fun healAllowedNetworkTypes() {
+        try {
+            val rawModes = Settings.Global.getString(contentResolver, PREFERRED_NETWORK_MODE)
+            if (!rawModes.isNullOrEmpty()) {
+                val parts = rawModes.split(",")
+                if (parts.any { it == "35" || it == "32" }) {
+                    val sanitized =
+                        parts.joinToString(",") {
+                            if (it == "35" || it == "32") "26" else it
+                        }
+                    Settings.Global.putString(contentResolver, PREFERRED_NETWORK_MODE, sanitized)
+                    Log.i(TAG, "Sanitized $PREFERRED_NETWORK_MODE: $rawModes -> $sanitized")
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "cannot sanitize $PREFERRED_NETWORK_MODE", e)
+        }
+
+        val subManager = getSystemService(SubscriptionManager::class.java) ?: return
+        val activeSubs =
+            try {
+                subManager.activeSubscriptionInfoList
+            } catch (e: Exception) {
+                Log.w(TAG, "cannot query active subscriptions", e)
+                return
+            } ?: return
+
+        val baseTm = getSystemService(TelephonyManager::class.java) ?: return
+        for (subInfo in activeSubs) {
+            val subId = subInfo.subscriptionId
+            if (!SubscriptionManager.isValidSubscriptionId(subId)) continue
+            try {
+                val tm = baseTm.createForSubscriptionId(subId)
+                val userMask =
+                    tm.getAllowedNetworkTypesForReason(
+                        TelephonyManager.ALLOWED_NETWORK_TYPES_REASON_USER
+                    )
+                if (userMask != 0L && (userMask and RAF_GSM) != 0L) continue
+
+                val healedMask =
+                    when {
+                        userMask == 0L -> RAF_NR_LTE_GSM_WCDMA
+                        (userMask and TelephonyManager.NETWORK_TYPE_BITMASK_NR) != 0L ->
+                            RAF_NR_LTE_GSM_WCDMA
+                        (userMask and TelephonyManager.NETWORK_TYPE_BITMASK_LTE) != 0L ->
+                            RAF_LTE_GSM_WCDMA
+                        else -> RAF_GSM_WCDMA
+                    }
+                Log.i(
+                    TAG,
+                    "Healing invalid user allowed network types for sub $subId: $userMask -> $healedMask",
+                )
+                tm.setAllowedNetworkTypesForReason(
+                    TelephonyManager.ALLOWED_NETWORK_TYPES_REASON_USER,
+                    healedMask,
+                )
+            } catch (e: Exception) {
+                Log.w(TAG, "cannot heal allowed network types for sub $subId", e)
+            }
+        }
+    }
+
     companion object {
         private const val TAG = "ImsHeal"
         private val DEBUG = Log.isLoggable(TAG, Log.DEBUG)
+        private const val PREFERRED_NETWORK_MODE = "preferred_network_mode"
+
+        private val RAF_GSM =
+            TelephonyManager.NETWORK_TYPE_BITMASK_GSM or
+                TelephonyManager.NETWORK_TYPE_BITMASK_GPRS or
+                TelephonyManager.NETWORK_TYPE_BITMASK_EDGE
+
+        private val RAF_WCDMA =
+            TelephonyManager.NETWORK_TYPE_BITMASK_UMTS or
+                TelephonyManager.NETWORK_TYPE_BITMASK_HSDPA or
+                TelephonyManager.NETWORK_TYPE_BITMASK_HSUPA or
+                TelephonyManager.NETWORK_TYPE_BITMASK_HSPA or
+                TelephonyManager.NETWORK_TYPE_BITMASK_HSPAP
+
+        private val RAF_GSM_WCDMA = RAF_GSM or RAF_WCDMA
+        private val RAF_LTE_GSM_WCDMA =
+            RAF_GSM_WCDMA or TelephonyManager.NETWORK_TYPE_BITMASK_LTE
+        private val RAF_NR_LTE_GSM_WCDMA =
+            RAF_LTE_GSM_WCDMA or TelephonyManager.NETWORK_TYPE_BITMASK_NR
 
         /*
          * The tester's outage lasted until he reached for airplane mode, so
