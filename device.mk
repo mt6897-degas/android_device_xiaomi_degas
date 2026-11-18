@@ -387,20 +387,23 @@ PRODUCT_PACKAGES += \
     android.hardware.wifi.direct.prebuilt.xml \
     android.hardware.wifi.passpoint.prebuilt.xml
 
-# Inherit the proprietary files
-$(call inherit-product, vendor/xiaomi/degas/degas-vendor.mk)
+# Inherit the proprietary files (optional for Phase 1 `m vendorbootimage` bring-up;
+# required for Phase 2 full ROM builds).
+$(call inherit-product-if-exists, vendor/xiaomi/degas/degas-vendor.mk)
 
 # MiuiCamera (stock camera app); its files live outside this repository.
 $(call inherit-product-if-exists, vendor/xiaomi/miuicamera/miuicamera.mk)
 
 # Spatial audio (stock spatializer effect, its data files and properties); the files live
 # outside this repository.
-$(call inherit-product, vendor/xiaomi/degas-dolby/spatial/spatial.mk)
+$(call inherit-product-if-exists, vendor/xiaomi/degas-dolby/spatial/spatial.mk)
 
 # Dolby audio effect (stock libraries, DMS service, settings app).
-$(call inherit-product, vendor/xiaomi/degas-dolby/fx/fx.mk)
+$(call inherit-product-if-exists, vendor/xiaomi/degas-dolby/fx/fx.mk)
 
 # Dolby decoders (stock Codec2 audio and Dolby Vision services).
-DEGAS_DOLBY_VISION := true
-DEGAS_DOLBY_VISION_ABI_REVIEWED := true
-$(call inherit-product, vendor/xiaomi/degas-dolby/codec/codec.mk)
+# Kept disabled for initial Android 17 (cnb) bring-up until Codec2 HIDL -v34 ABI
+# compatibility is audited against A17 libcodec2_vndk / libdolbyc2_shim.
+DEGAS_DOLBY_VISION := false
+DEGAS_DOLBY_VISION_ABI_REVIEWED := false
+$(call inherit-product-if-exists, vendor/xiaomi/degas-dolby/codec/codec.mk)

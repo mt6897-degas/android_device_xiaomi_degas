@@ -149,8 +149,12 @@ TARGET_USERIMAGES_USE_F2FS := true
 # SEPolicy
 include device/mediatek/sepolicy_vndr/SEPolicy.mk
 BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
+ifneq ($(wildcard vendor/xiaomi/degas-dolby/fx/sepolicy/vendor),)
 BOARD_SEPOLICY_DIRS += vendor/xiaomi/degas-dolby/fx/sepolicy/vendor
+endif
+ifneq ($(wildcard vendor/xiaomi/degas-dolby/codec/sepolicy/vendor),)
 BOARD_SEPOLICY_DIRS += vendor/xiaomi/degas-dolby/codec/sepolicy/vendor
+endif
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 
 # Verified Boot
@@ -205,8 +209,9 @@ WIFI_FEATURE_HOSTAPD_11AX := true
 WIFI_FEATURE_SUPPLICANT_11AX := true
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 
-# Inherit the proprietary files
-include vendor/xiaomi/degas/BoardConfigVendor.mk
+# Inherit the proprietary files (optional so Phase 1 `m vendorbootimage` builds
+# cleanly before vendor blobs are extracted; required for Phase 2 full ROM).
+-include vendor/xiaomi/degas/BoardConfigVendor.mk
 
 # Allow ELF prebuilts in PRODUCT_COPY_FILES (restored vendor blobs)
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
