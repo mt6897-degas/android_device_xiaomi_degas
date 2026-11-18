@@ -74,6 +74,10 @@ class ImsHealService : Service() {
     /** Uptime after which a new poke may be issued. */
     private var quietUntil = 0L
 
+    /** One-shot boot/dirty-flash guards so we do not hammer IPC every 15 s. */
+    private var globalModeSanitized = false
+    private val healedSubIds = mutableSetOf<Int>()
+
     private val pollRunnable =
         object : Runnable {
             override fun run() {
@@ -227,27 +231,35 @@ class ImsHealService : Service() {
 
     /**
      * Repairs stale user allowed-RAT bitmasks left in /data by earlier builds
-     * (`ro.telephony.default_network=35` -> `user=0`, or `prefer_2g_bool=false`
-     * GSM-less bitmasks that `mtkfusionrild` rejects with `INVALID_ARGUMENTS`).
-     * Valid user selections on this device (`26`, `9`, `0`, `1`) all include
-     * [RAF_GSM], so this is a no-op once healed.
+     * (`ro.telephony.default_network=35` -> `user=0`, `33` without WCDMA, or
+     * `prefer_2g_bool=false` GSM-less bitmasks that `mtkfusionrild` rejects
+     * with `INVALID_ARGUMENTS`). Runs once per active subscription so normal
+     * operation does not keep hammering telephony IPC or overriding manual
+     * testing choices.
      */
     private fun healAllowedNetworkTypes() {
-        try {
-            val rawModes = Settings.Global.getString(contentResolver, PREFERRED_NETWORK_MODE)
-            if (!rawModes.isNullOrEmpty()) {
-                val parts = rawModes.split(",")
-                if (parts.any { it == "35" || it == "32" }) {
-                    val sanitized =
-                        parts.joinToString(",") {
-                            if (it == "35" || it == "32") "26" else it
-                        }
-                    Settings.Global.putString(contentResolver, PREFERRED_NETWORK_MODE, sanitized)
-                    Log.i(TAG, "Sanitized $PREFERRED_NETWORK_MODE: $rawModes -> $sanitized")
+        if (!globalModeSanitized) {
+            try {
+                val rawModes = Settings.Global.getString(contentResolver, PREFERRED_NETWORK_MODE)
+                if (!rawModes.isNullOrEmpty()) {
+                    val parts = rawModes.split(",")
+                    if (parts.any { it == "35" || it == "33" || it == "32" }) {
+                        val sanitized =
+                            parts.joinToString(",") {
+                                if (it == "35" || it == "33" || it == "32") "26" else it
+                            }
+                        Settings.Global.putString(
+                            contentResolver,
+                            PREFERRED_NETWORK_MODE,
+                            sanitized,
+                        )
+                        Log.i(TAG, "Sanitized $PREFERRED_NETWORK_MODE: $rawModes -> $sanitized")
+                    }
                 }
+                globalModeSanitized = true
+            } catch (e: Exception) {
+                Log.w(TAG, "cannot sanitize $PREFERRED_NETWORK_MODE", e)
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "cannot sanitize $PREFERRED_NETWORK_MODE", e)
         }
 
         val subManager = getSystemService(SubscriptionManager::class.java) ?: return
@@ -263,13 +275,17 @@ class ImsHealService : Service() {
         for (subInfo in activeSubs) {
             val subId = subInfo.subscriptionId
             if (!SubscriptionManager.isValidSubscriptionId(subId)) continue
+            if (subId in healedSubIds) continue
             try {
                 val tm = baseTm.createForSubscriptionId(subId)
                 val userMask =
                     tm.getAllowedNetworkTypesForReason(
                         TelephonyManager.ALLOWED_NETWORK_TYPES_REASON_USER
                     )
-                if (userMask != 0L && (userMask and RAF_GSM) != 0L) continue
+                if (userMask != 0L && (userMask and RAF_GSM) != 0L) {
+                    healedSubIds.add(subId)
+                    continue
+                }
 
                 val healedMask =
                     when {
@@ -288,6 +304,7 @@ class ImsHealService : Service() {
                     TelephonyManager.ALLOWED_NETWORK_TYPES_REASON_USER,
                     healedMask,
                 )
+                healedSubIds.add(subId)
             } catch (e: Exception) {
                 Log.w(TAG, "cannot heal allowed network types for sub $subId", e)
             }
@@ -313,7 +330,9 @@ class ImsHealService : Service() {
 
         private val RAF_GSM_WCDMA = RAF_GSM or RAF_WCDMA
         private val RAF_LTE_GSM_WCDMA =
-            RAF_GSM_WCDMA or TelephonyManager.NETWORK_TYPE_BITMASK_LTE
+            RAF_GSM_WCDMA or
+                TelephonyManager.NETWORK_TYPE_BITMASK_LTE or
+                TelephonyManager.NETWORK_TYPE_BITMASK_LTE_CA
         private val RAF_NR_LTE_GSM_WCDMA =
             RAF_LTE_GSM_WCDMA or TelephonyManager.NETWORK_TYPE_BITMASK_NR
 

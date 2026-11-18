@@ -1158,7 +1158,14 @@
     <boolean name="carrier_disable_sa_mode_bool" value="false" />
   </carrier_config>
   <!-- ID Smartfren-->
-  <carrier_config mcc="510" mnc="09,28">
+  <carrier_config mcc="510" mnc="09">
+    <boolean name="prefer_2g_bool" value="true" />
+    <boolean name="carrier_volte_available_bool" value="true" />
+    <boolean name="carrier_vt_available_bool" value="true" />
+    <boolean name="carrier_sa_mode_available_bool" value="true" />
+    <boolean name="carrier_disable_sa_mode_bool" value="false" />
+  </carrier_config>
+  <carrier_config mcc="510" mnc="28">
     <boolean name="prefer_2g_bool" value="true" />
     <boolean name="carrier_volte_available_bool" value="true" />
     <boolean name="carrier_vt_available_bool" value="true" />
@@ -1498,7 +1505,7 @@
   <carrier_config mcc="405" mnc="70,799,845,846,847,848,849,850,851,852,853,908,909,910,911">
     <boolean name="carrier_volte_available_bool" value="true" />
     <boolean name="carrier_wfc_ims_available_bool" value="true" />
-    <ban name="carrier_vt_available_bool" value="true" />
+    <boolean name="carrier_vt_available_bool" value="true" />
   </carrier_config>
   <!-- Sri lanka-->
   <!-- Sri lanka Dialog-->
