@@ -306,7 +306,6 @@ ro.vendor.mtk_external_sim_support=1
 ro.vendor.mtk_fd_support=1
 ro.vendor.mtk_gwsd_capability=2
 ro.vendor.mtk_lte_support=1
-ro.vendor.mtk_mcf_support=1
 ro.vendor.mtk_mipc_support=1
 ro.vendor.mtk_mobile_management=1
 ro.vendor.mtk_protocol1_rat_config=N/C/Lf/Lt/W/G
