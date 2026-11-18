@@ -11,6 +11,7 @@ ro.audio.monitorRotation=true
 ro.config.media_vol_default=20
 ro.config.vc_call_vol_default=4
 ro.config.vc_call_vol_steps=11
+ro.vendor.audio.dolby.vision.support=true
 ro.vendor.audio.gain.support=true
 ro.vendor.audio.soundtrigger.record_supported=1
 ro.vendor.audio.soundtrigger.support_record_type=0x0011
@@ -319,6 +320,9 @@ ro.vendor.mtk_wappush_support=1
 ro.vendor.mtk_world_phone_policy=0
 ro.vendor.num_md_protocol=2
 ro.vendor.ril.set_sbp_place=0
+ro.vendor.radio.5g=3
+ro.vendor.radio.features_common=2
+ro.vendor.radio.max.multisim=dsds
 ro.vendor.sim_me_lock_mode=3
 ro.vendor.vt_hevc_support=1
 
