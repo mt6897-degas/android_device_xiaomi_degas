@@ -54,8 +54,12 @@ blob_fixups: blob_fixups_user_type = {
         .replace_needed('libalsautils.so', 'libalsautils-v34.so')
         .replace_needed('libtinyxml2.so', 'libtinyxml2-v34.so'),
 
+    'vendor/lib64/hw/android.hardware.audio@7.1-impl-mediatek.so': blob_fixup()
+        .replace_needed('android.hardware.audio@7.1-util.so', 'android.hardware.audio@7.1-util-v34.so'),
+
     'vendor/lib64/hw/android.hardware.soundtrigger3-impl.so': blob_fixup()
-        .replace_needed('android.hardware.soundtrigger3-V1-ndk.so', 'android.hardware.soundtrigger3-V3-ndk.so'),
+        .replace_needed('android.hardware.soundtrigger3-V1-ndk.so', 'android.hardware.soundtrigger3-V3-ndk.so')
+        .replace_needed('libaudio_aidl_conversion_common_ndk.so', 'libaudio_aidl_conversion_common_ndk-v34.so'),
 
     'vendor/lib64/vendor.mediatek.hardware.bluetooth.audio-V1-ndk.so': blob_fixup()
         .replace_needed('android.hardware.audio.common-V1-ndk.so', 'android.hardware.audio.common-V2-ndk.so'),
@@ -113,7 +117,6 @@ blob_fixups: blob_fixups_user_type = {
      'vendor/lib64/hw/mt6897/android.hardware.graphics.mapper@4.0-impl-mediatek.so',
      'vendor/lib64/hw/mt6897/mapper.mediatek.so',
      'vendor/lib64/libaimemc.so',
-     'vendor/lib64/libcodec2_fsr.so',
      'vendor/lib64/vendor.mediatek.hardware.camera.isphal-V1-ndk.so',
      'vendor/lib64/vendor.mediatek.hardware.pq_aidl-V2-ndk.so',
      'vendor/lib64/vendor.mediatek.hardware.pq_aidl-V4-ndk.so',
@@ -177,19 +180,104 @@ blob_fixups: blob_fixups_user_type = {
      'vendor/lib64/mt6897/libmmlpqImpl.so'): blob_fixup()
         .replace_needed('libtinyxml2.so', 'libtinyxml2-v34.so'),
 
-    ('odm/lib64/libmt_mitee.so',
-     'vendor/bin/hw/android.hardware.security.keymint@3.0-service.mitee'): blob_fixup()
-        .replace_needed('android.hardware.security.keymint-V3-ndk.so', 'android.hardware.security.keymint-V3-ndk-v34.so'),
+    # Android 17 Keymint V3 split (uses AOSP system/keymaster *_V3 + stock libkeymint_V3)
+    'vendor/bin/hw/android.hardware.security.keymint@3.0-service.mitee': blob_fixup()
+        .replace_needed('lib_android_keymaster_keymint_utils.so', 'lib_android_keymaster_keymint_utils_V3.so')
+        .replace_needed('libkeymint.so', 'libkeymint_V3.so'),
+
+    'vendor/lib64/libkeymint_V3.so': blob_fixup()
+        .replace_needed('lib_android_keymaster_keymint_utils.so', 'lib_android_keymaster_keymint_utils_V3.so'),
+
+    'vendor/lib64/libkeymint_remote_prov_support_V3.so': blob_fixup()
+        .replace_needed('libbase.so', 'libbase-v34.so')
+        .add_needed('libcppcose_rkp-V3.so'),
+
+    'odm/lib64/libmt_mitee.so': blob_fixup()
+        .replace_needed('lib_android_keymaster_keymint_utils.so', 'lib_android_keymaster_keymint_utils_V3.so')
+        .replace_needed('libkeymint.so', 'libkeymint_V3.so')
+        .replace_needed('libkeymint_remote_prov_support.so', 'libkeymint_remote_prov_support_V3.so')
+        .replace_needed('libkeymint_support.so', 'libkeymint_support_V3.so'),
+
+    # Android 17 Codec2 HIDL -v34 split
+    'vendor/bin/hw/android.hardware.media.c2@1.2-mediatek-64b': blob_fixup()
+        .replace_needed('libcodec2_hidl@1.0.so', 'libcodec2_hidl@1.0-v34.so')
+        .replace_needed('libcodec2_hidl@1.1.so', 'libcodec2_hidl@1.1-v34.so')
+        .replace_needed('libcodec2_hidl@1.2.so', 'libcodec2_hidl@1.2-v34.so')
+        .replace_needed('libcodec2_vndk.so', 'libcodec2_vndk-v34.so'),
 
     'vendor/etc/vintf/manifest/manifest_media_c2_V1_2_default.xml': blob_fixup()
         .regex_replace('.+dolby.+\n', ''),
 
+    'vendor/lib64/libcodec2_fsr.so': blob_fixup()
+        .replace_needed('android.hardware.graphics.common-V4-ndk.so', 'android.hardware.graphics.common-V7-ndk.so')
+        .replace_needed('libui.so', 'libui-v34.so'),
+
+    'vendor/lib64/libcodec2_hidl@1.0-v34.so': blob_fixup()
+        .replace_needed('libstagefright_bufferqueue_helper.so', 'libstagefright_bufferqueue_helper-v36.so')
+        .replace_needed('libcodec2_hidl_plugin.so', 'libcodec2_hidl_plugin-v34.so')
+        .replace_needed('libcodec2_vndk.so', 'libcodec2_vndk-v34.so')
+        .replace_needed('libui.so', 'libui-v34.so'),
+
+    'vendor/lib64/libcodec2_hidl@1.1-v34.so': blob_fixup()
+        .replace_needed('libstagefright_bufferqueue_helper.so', 'libstagefright_bufferqueue_helper-v36.so')
+        .replace_needed('libcodec2_hidl@1.0.so', 'libcodec2_hidl@1.0-v34.so')
+        .replace_needed('libcodec2_hidl_plugin.so', 'libcodec2_hidl_plugin-v34.so')
+        .replace_needed('libcodec2_vndk.so', 'libcodec2_vndk-v34.so')
+        .replace_needed('libui.so', 'libui-v34.so'),
+
+    'vendor/lib64/libcodec2_hidl@1.2-v34.so': blob_fixup()
+        .replace_needed('libstagefright_bufferqueue_helper.so', 'libstagefright_bufferqueue_helper-v36.so')
+        .replace_needed('libcodec2_hidl@1.0.so', 'libcodec2_hidl@1.0-v34.so')
+        .replace_needed('libcodec2_hidl@1.1.so', 'libcodec2_hidl@1.1-v34.so')
+        .replace_needed('libcodec2_hidl_plugin.so', 'libcodec2_hidl_plugin-v34.so')
+        .replace_needed('libcodec2_vndk.so', 'libcodec2_vndk-v34.so')
+        .replace_needed('libui.so', 'libui-v34.so'),
+
+    ('vendor/lib64/libcodec2_hidl_plugin-v34.so',
+     'vendor/lib64/libsfplugin_ccodec_utils-v34.so'): blob_fixup()
+        .replace_needed('libcodec2_vndk.so', 'libcodec2_vndk-v34.so'),
+
+    ('vendor/lib64/libcodec2_mtk_c2store.so',
+     'vendor/lib64/libcodec2_mtk_vdec.so',
+     'vendor/lib64/libcodec2_mtk_venc.so',
+     'vendor/lib64/libcodec2_soft_mtk_alacdec.so',
+     'vendor/lib64/libcodec2_soft_mtk_imaadpcmdec.so',
+     'vendor/lib64/libcodec2_soft_mtk_mp3dec.so',
+     'vendor/lib64/libcodec2_soft_mtk_msadpcmdec.so',
+     'vendor/lib64/libcodec2_vpp_fa_plugin.so',
+     'vendor/lib64/libcodec2_vpp_frc_plugin.so',
+     'vendor/lib64/libcodec2_vpp_qt_plugin.so',
+     'vendor/lib64/libcodec2_vpp_rs_plugin.so'): blob_fixup()
+        .replace_needed('libcodec2_soft_common.so', 'libcodec2_soft_common-v34.so')
+        .replace_needed('libcodec2_vndk.so', 'libcodec2_vndk-v34.so')
+        .replace_needed('libsfplugin_ccodec_utils.so', 'libsfplugin_ccodec_utils-v34.so')
+        .replace_needed('libui.so', 'libui-v34.so')
+        .replace_needed('libformatter.so', 'libformatter-v34.so'),
+
+    'vendor/lib64/libcodec2_soft_common-v34.so': blob_fixup()
+        .replace_needed('libcodec2_vndk.so', 'libcodec2_vndk-v34.so')
+        .replace_needed('libsfplugin_ccodec_utils.so', 'libsfplugin_ccodec_utils-v34.so')
+        .replace_needed('libui.so', 'libui-v34.so'),
+
+    'vendor/lib64/libcodec2_vndk-v34.so': blob_fixup()
+        .replace_needed('libui.so', 'libui-v34.so')
+        .replace_needed('android.hardware.media.bufferpool2-V1-ndk.so', 'android.hardware.media.bufferpool2-V2-ndk.so'),
+
     'system_ext/lib64/libimsma.so': blob_fixup()
         .replace_needed('libsink.so', 'libsink-mtk.so'),
+
+    'system_ext/lib64/libsink-mtk.so': blob_fixup()
+        .add_needed('libaudioclient_shim.so'),
 
     'odm/bin/hw/vendor.xiaomi.sensor.citsensorservice.aidl': blob_fixup()
         .replace_needed('libtinyxml2.so', 'libtinyxml2-v34.so')
         .replace_needed('libui.so', 'libui-v34.so'),
+
+    'vendor/etc/init/tee-supplicant.rc': blob_fixup()
+        .regex_replace('chown system system /dev/ufs-bsg0', 'chown root system /dev/ufs-bsg0'),
+
+    'vendor/bin/mnld': blob_fixup()
+        .replace_needed('libmnl.so', 'libmnl-v34.so'),
 
     # Stock names this jar androidx.camera.extensions.impl.jar. It is installed
     # as ...impl.xiaomi.jar (see proprietary-files.txt) so it cannot collide with

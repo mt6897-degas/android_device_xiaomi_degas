@@ -18,22 +18,6 @@ codename `degas` (MediaTek Dimensity 8300-Ultra, MT6897).
 Phase 1 (`m vendorbootimage`) builds cleanly before proprietary blobs are
 extracted.
 
-What `vendor_boot.img` includes for `degas`:
-- Boot header v4 (`BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864`, LZ4 ramdisk)
-- DTB + first-stage vendor ramdisk modules (`vendor_ramdisk.modules.load`)
-- Recovery ramdisk + touch modules (`vendor_ramdisk.modules.load.recovery`:
-  `xiaomi_touch_common.ko`, `goodix_core_rothko.ko`, `focaltech_touch_rothko.ko`)
-- Recovery touch fix (`init/init.recovery.mt6897.rc`:
-  `write /sys/class/touch/touch_dev/enable_touch_raw 0`)
-- Recovery HALs (`android.hardware.boot-service.mediatek_recovery`,
-  `android.hardware.health-service.mediatek-recovery`, `create_pl_dev.recovery`,
-  `fastbootd`, `update_engine_sideload`)
-
-### Sync & build `vendor_boot.img`
-
-Requires a Linux x86_64 host with **>= 250 GB free disk** (full `cnb` sync + build)
-and >= 16 GB RAM (32 GB recommended):
-
 ```sh
 mkdir -p evox-cnb && cd evox-cnb
 repo init -u https://github.com/Evolution-X/manifest -b cnb --git-lfs
@@ -42,22 +26,45 @@ cp /path/to/evox-a17-degas/manifests/evox-degas-cnb.xml .repo/local_manifests/
 # Place this tree at device/xiaomi/degas (clone or copy)
 repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
-# Required Phase 1 patch (drops duplicate android.hardware.audio.service.mediatek)
-git -C hardware/mediatek apply "$PWD/device/xiaomi/degas/patches/hardware_mediatek/0001-drop-duplicate-mediatek-audio-service.patch"
-
-source build/envsetup.sh
-lunch lineage_degas-cp2a-userdebug
-m vendorbootimage
+bash /path/to/evox-a17-degas/scripts/build-vendor-boot.sh "$PWD"
 ```
 
-Output image: `out/target/product/degas/vendor_boot.img` (must be <= 64 MiB).
+Output image: `out/target/product/degas/vendor_boot.img` (verified `VNDRBOOT`
+header v4, <= 64 MiB, touch fix `enable_touch_raw 0` + recovery touch modules).
 
-## Phase 2: Full Evolution X Android 17 ROM
+## Phase 2: Full Evolution X 12.4 (Android 17) ROM
 
-See [`patches/README.md`](patches/README.md) for the Android 17 MT6897 blob
-compatibility checklist (Keymint V3 split, Codec2 HIDL `-v34`, `libsink-mtk`
-`libaudioclient_shim`, `mnld` `libmnl-v34`, `wpa_supplicant_8` gen4m WPA3/SAE,
-and Settings radio patches).
+`extract-files.py` and `proprietary-files.txt` are pre-ported to Android 17
+(`cnb`) MT6897 requirements (all source libraries verified against stock
+`OS3.0.4.0.WNEMIXM`):
+- **Keymint V3 split:** `libkeymint_V3.so`, `libkeymint_remote_prov_support_V3.so`,
+  `libcppcose_rkp-V3.so` + AOSP `lib_android_keymaster_keymint_utils_V3` /
+  `libkeymint_support_V3` + compat `libbase-v34.so`.
+- **Codec2 HIDL `-v34` split:** `libcodec2_hidl@1.0/1.1/1.2-v34.so`,
+  `libcodec2_vndk-v34.so`, `libcodec2_hidl_plugin-v34.so`,
+  `libcodec2_soft_common-v34.so`, `libsfplugin_ccodec_utils-v34.so`,
+  `libformatter-v34.so`, `libstagefright_bufferqueue_helper-v36.so`, `libui-v34.so`.
+- **Audio & SoundTrigger:** `android.hardware.audio@7.1-util-v34.so`,
+  `libaudio_aidl_conversion_common_ndk-v34.so`.
+- **IMS & GNSS & TEE:** `libsink-mtk.so` -> `libaudioclient_shim.so`,
+  `mnld` -> `libmnl-v34.so`, `tee-supplicant.rc` `/dev/ufs-bsg0` ownership fix.
+
+Steps on build server:
+1. Extract blobs from stock `OS3.0.4.0.WNEMIXM` dump:
+   ```sh
+   cd device/xiaomi/degas
+   ./extract-files.py /path/to/OS3.0.4.0.WNEMIXM-dump
+   ./fix-generated-bp.py
+   ```
+2. Strip firmware lines (`AB_OTA_PARTITIONS` / `add-radio-file`) from
+   `vendor/xiaomi/degas/BoardConfigVendor.mk` and `vendor/xiaomi/degas/Android.mk`
+   so the ROM strictly touches only the 14 Android partitions (NO `lk`).
+3. Ensure `vendor/xiaomi/degas/proprietary/system_ext/priv-app/ImsService/ImsService.apk`
+   carries the receiver-export smali patch (`./verify-hand-edits.py` must print `OK`).
+4. Build:
+   ```sh
+   bash /path/to/evox-a17-degas/scripts/build-rom.sh "$ANDROID_BUILD_TOP"
+   ```
 
 Build flags in `lineage_degas.mk`:
 - `EVO_BUILD_TYPE := Unofficial`
@@ -65,18 +72,12 @@ Build flags in `lineage_degas.mk`:
 - `TARGET_USES_PICO_GAPPS := true` (override with `WITH_GMS=false` for Vanilla)
 - `SURFACE_FLINGER_BOOST := true`
 - `WITH_ADB_INSECURE` stays OFF.
-- Partition allowlist stays strictly 14 Android partitions (NO `lk`, NO firmware).
-
-```sh
-source build/envsetup.sh
-lunch lineage_degas-cp2a-userdebug
-m evolution
-```
+- `DEGAS_DOLBY_VISION := false` initially until A17 Dolby Codec2 `-v34` ABI is audited.
 
 ## Credits
 
-- Based on the [duchamp device tree](https://github.com/mt6897-devs/device_xiaomi_duchamp)
-  and `Evolution-X-Devices/device_xiaomi_duchamp` (`cnb`), same MT6897 platform.
+- Based on `mt6897-devs/device_xiaomi_duchamp` and
+  `Evolution-X-Devices/device_xiaomi_duchamp` (`cnb`), same MT6897 platform.
 - Degas bring-up & Evolution X Android 17 adaptation by `@saiquer`.
 
 ## License

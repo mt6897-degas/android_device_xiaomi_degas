@@ -1,0 +1,45 @@
+From: saiquer <85092544+saiquer@users.noreply.github.com>
+Subject: [PATCH] Settings: fix per-subId TD-SCDMA check and GSM LTE entry selection
+
+- Use CarrierConfigCache.getConfigForSubId(telephonyManager.getSubscriptionId())
+  in MobileNetworkUtils.isTdscdmaSupported() so dual-SIM devices read the target
+  subscription's CarrierConfig instead of default data subId.
+- Avoid selecting NETWORK_MODE_LTE_CDMA_EVDO_GSM_WCDMA on non-CDMA GSM devices
+  in EnabledNetworkModePreferenceController; select NETWORK_MODE_LTE_GSM_WCDMA
+  so MediaTek mtkfusionrild accepts user network mode writes cleanly.
+
+diff --git a/src/com/android/settings/network/telephony/EnabledNetworkModePreferenceController.java b/src/com/android/settings/network/telephony/EnabledNetworkModePreferenceController.java
+index 58962bb..2c41382 100644
+--- a/src/com/android/settings/network/telephony/EnabledNetworkModePreferenceController.java
++++ b/src/com/android/settings/network/telephony/EnabledNetworkModePreferenceController.java
+@@ -765,13 +765,14 @@ public class EnabledNetworkModePreferenceController extends
+                         setSummary(is5gEntryDisplayed()
+                                 ? R.string.network_lte_pure : R.string.network_lte);
+                     } else {
+-                        setSelectedEntry(
+-                                TelephonyManager.NETWORK_MODE_LTE_CDMA_EVDO_GSM_WCDMA);
+                         if (mTelephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_CDMA
+                                 || mIsGlobalCdma
+                                 || MobileNetworkUtils.isWorldMode(mContext, mSubId)) {
++                            setSelectedEntry(
++                                    TelephonyManager.NETWORK_MODE_LTE_CDMA_EVDO_GSM_WCDMA);
+                             setSummary(R.string.network_global);
+                         } else {
++                            setSelectedEntry(TelephonyManager.NETWORK_MODE_LTE_GSM_WCDMA);
+                             if (is5gEntryDisplayed()) {
+                                 setSummary(mShow4gForLTE
+                                         ? R.string.network_4G_pure : R.string.network_lte_pure);
+diff --git a/src/com/android/settings/network/telephony/MobileNetworkUtils.java b/src/com/android/settings/network/telephony/MobileNetworkUtils.java
+index bfd9116..987d221 100644
+--- a/src/com/android/settings/network/telephony/MobileNetworkUtils.java
++++ b/src/com/android/settings/network/telephony/MobileNetworkUtils.java
+@@ -458,7 +458,8 @@ public class MobileNetworkUtils {
+ 
+     //TODO(b/117651939): move it to telephony
+     private static boolean isTdscdmaSupported(Context context, TelephonyManager telephonyManager) {
+-        final PersistableBundle carrierConfig = CarrierConfigCache.getInstance(context).getConfig();
++        final PersistableBundle carrierConfig = CarrierConfigCache.getInstance(context)
++                .getConfigForSubId(telephonyManager.getSubscriptionId());
+ 
+         if (carrierConfig == null) {
+             return false;

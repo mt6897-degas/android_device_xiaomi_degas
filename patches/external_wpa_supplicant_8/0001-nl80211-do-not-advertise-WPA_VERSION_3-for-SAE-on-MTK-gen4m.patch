@@ -1,0 +1,46 @@
+From: Mikhail Mlhcnn <mikhail@advnirr.org>
+Subject: [PATCH] nl80211: do not advertise WPA_VERSION_3 for SAE on MTK gen4m
+
+MediaTek gen4m driver (MT6897) fails to parse NL80211_WPA_VERSION_3 in
+connect requests, dropping the AKM suite and rejecting WPA3/WPA3-transition
+APs with status 16. Guard VERSION_3 advertisement in wpa_ver_supported()
+behind CONFIG_DRIVER_NL80211_MTK and wire board_wlan_mtk_gen4m into
+wpa_supplicant/Android.bp (rebased for Android 17 / lineage-24.0).
+
+diff --git a/src/drivers/driver_nl80211.c b/src/drivers/driver_nl80211.c
+index af544ab..b35de03 100644
+--- a/src/drivers/driver_nl80211.c
++++ b/src/drivers/driver_nl80211.c
+@@ -3840,6 +3840,7 @@ static int wpa_ver_supported(struct wpa_driver_nl80211_data *drv,
+ 	if (proto & WPA_PROTO_WPA)
+ 		ver |= NL80211_WPA_VERSION_1;
+ 	if (proto & WPA_PROTO_RSN) {
++#if !defined(CONFIG_DRIVER_NL80211_MTK)
+ 		if (drv->chip_vendor_id != OUI_BRCM) {
+ 			/*
+ 			* NL80211_ATTR_SAE_PASSWORD is related and was added
+@@ -3850,7 +3851,9 @@ static int wpa_ver_supported(struct wpa_driver_nl80211_data *drv,
+ 				ver |= NL80211_WPA_VERSION_3;
+ 			else
+ 				ver |= NL80211_WPA_VERSION_2;
+-		} else {
++		} else
++#endif
++		{
+ 			ver |= NL80211_WPA_VERSION_2;
+ 		}
+ 		
+diff --git a/wpa_supplicant/Android.bp b/wpa_supplicant/Android.bp
+index 55f7ae8..3a9befc 100644
+--- a/wpa_supplicant/Android.bp
++++ b/wpa_supplicant/Android.bp
+@@ -757,6 +757,9 @@ cc_defaults {
+     }) + select(soong_config_variable("wpa_supplicant_8", "board_wlan_bcmdhd_sae"), {
+         true: ["-DCONFIG_BRCM_SAE"],
+         default: [],
++    }) + select(soong_config_variable("wpa_supplicant_8", "board_wlan_mtk_gen4m"), {
++        true: ["-DCONFIG_DRIVER_NL80211_MTK"],
++        default: [],
+     }),
+ }
+ 
