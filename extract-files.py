@@ -11,6 +11,7 @@ from pathlib import Path
 from tools.libsink_compat import fix_libsink_fields
 from tools.codec2_compat import fix_codec2_memory_backend, fix_codec2_store_size
 from tools.hypercharge_compat import fix_batterysecret_acceleration
+from tools.thermal_compat import fix_thermal_init
 
 from extract_utils.fixups_blob import (
     blob_fixup,
@@ -94,9 +95,12 @@ blob_fixups: blob_fixups_user_type = {
     'vendor/lib64/vendor.mediatek.hardware.bluetooth.audio-V1-ndk-vendor.so': blob_fixup()
         .replace_needed('android.hardware.audio.common-V1-ndk.so', 'android.hardware.audio.common-V2-ndk.so'),
 
-    ('vendor/etc/init/hw/init.batterysecret.rc',
-     'vendor/etc/init/hw/init.mi_thermald.rc'): blob_fixup()
+    'vendor/etc/init/hw/init.batterysecret.rc': blob_fixup()
         .regex_replace('.*seclabel.*\n', ''),
+
+    'vendor/etc/init/hw/init.mi_thermald.rc': blob_fixup()
+        .regex_replace('.*seclabel.*\n', '')
+        .call(fix_thermal_init, need_tmp_dir=False),
 
     ('vendor/lib64/libarmnn_ndk.mtk.vndk.so',
      'vendor/lib64/mt6897/lib3a.ae.stat.so'): blob_fixup()

@@ -1,0 +1,556 @@
+{
+  "passed": true,
+  "input_sha256": {
+    "vendor/bin/mi_thermald": "bf69ce722cf5e6c9ebe49aa8396e992151aa140f5f3a35316e01a99c2ff62c39",
+    "vendor/etc/thermal-map.conf": "1450495764c6cbfa35166ef5878bf40da4331578421c7e38288733cd252ec758",
+    "odm/etc/thermal-normal.conf": "fe15174d2e3d8b3753140c1434262543db09ddf2c94cf03cf2f39f30f3a4068e",
+    "odm/etc/thermal-nolimits.conf": "cbd6b4e7f3ba29a1995411591f544e6dd32fe490356cba205a147384e2924031",
+    "odm/etc/thermal-charge.conf": "0ce8393ab2679aaa0063f68acec854fce62936d044604d2af258b0157265562b"
+  },
+  "plaintext_sha256": {
+    "thermal-map.conf": "c71c2722c816ef8f189f1104425478651460bcacdcf6b1dcb73f577c0077615e",
+    "thermal-normal.conf": "27a5ced6fd74bb368f95dd35bde9a2e876e3281de37e9b685cc94332ba7af853",
+    "thermal-nolimits.conf": "ad954d7f2cec0ddca407cf29cef745409a0a5562a7cb3aa251f2d6e74b66e9bd",
+    "thermal-charge.conf": "4c24cc45fb9411c296a2ca664265e41d3ec9dff49f4d1d0cb31c35a2c2ba079f"
+  },
+  "cipher_roundtrip_byte_identical": true,
+  "method": "Factory AES-128-CBC parameters derived from the pinned daemon; OpenSSL padding validation, UTF-8 parse, exact re-encryption.",
+  "scenario_map": {
+    "0": "thermal-normal.conf",
+    "6": "thermal-nolimits.conf",
+    "27": "thermal-charge.conf"
+  },
+  "profiles": {
+    "0": {
+      "file": "thermal-normal.conf",
+      "battery_section": "MONITOR-BAT",
+      "trig": [
+        32000,
+        34000,
+        37500,
+        38000,
+        38600,
+        40800,
+        41500,
+        43000,
+        44000,
+        45000
+      ],
+      "clr": [
+        30000,
+        32000,
+        35000,
+        37500,
+        38200,
+        38500,
+        40800,
+        41500,
+        43000,
+        44000
+      ],
+      "target": [
+        600,
+        800,
+        1002,
+        1104,
+        1107,
+        1207,
+        1209,
+        1411,
+        1414,
+        1515
+      ],
+      "samples_rising_temperature": [
+        {
+          "virtual_board_mc": 35000,
+          "screen_state": 0,
+          "encoded_target": 800,
+          "pd_thermal_level": 0,
+          "pd_fcc_ma": 12400
+        },
+        {
+          "virtual_board_mc": 35000,
+          "screen_state": 1,
+          "encoded_target": 800,
+          "pd_thermal_level": 8,
+          "pd_fcc_ma": 4400
+        },
+        {
+          "virtual_board_mc": 36000,
+          "screen_state": 0,
+          "encoded_target": 800,
+          "pd_thermal_level": 0,
+          "pd_fcc_ma": 12400
+        },
+        {
+          "virtual_board_mc": 36000,
+          "screen_state": 1,
+          "encoded_target": 800,
+          "pd_thermal_level": 8,
+          "pd_fcc_ma": 4400
+        },
+        {
+          "virtual_board_mc": 36500,
+          "screen_state": 0,
+          "encoded_target": 800,
+          "pd_thermal_level": 0,
+          "pd_fcc_ma": 12400
+        },
+        {
+          "virtual_board_mc": 36500,
+          "screen_state": 1,
+          "encoded_target": 800,
+          "pd_thermal_level": 8,
+          "pd_fcc_ma": 4400
+        },
+        {
+          "virtual_board_mc": 37000,
+          "screen_state": 0,
+          "encoded_target": 800,
+          "pd_thermal_level": 0,
+          "pd_fcc_ma": 12400
+        },
+        {
+          "virtual_board_mc": 37000,
+          "screen_state": 1,
+          "encoded_target": 800,
+          "pd_thermal_level": 8,
+          "pd_fcc_ma": 4400
+        },
+        {
+          "virtual_board_mc": 37500,
+          "screen_state": 0,
+          "encoded_target": 1002,
+          "pd_thermal_level": 2,
+          "pd_fcc_ma": 8800
+        },
+        {
+          "virtual_board_mc": 37500,
+          "screen_state": 1,
+          "encoded_target": 1002,
+          "pd_thermal_level": 10,
+          "pd_fcc_ma": 2600
+        },
+        {
+          "virtual_board_mc": 38000,
+          "screen_state": 0,
+          "encoded_target": 1104,
+          "pd_thermal_level": 4,
+          "pd_fcc_ma": 6600
+        },
+        {
+          "virtual_board_mc": 38000,
+          "screen_state": 1,
+          "encoded_target": 1104,
+          "pd_thermal_level": 11,
+          "pd_fcc_ma": 2200
+        },
+        {
+          "virtual_board_mc": 39000,
+          "screen_state": 0,
+          "encoded_target": 1107,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 39000,
+          "screen_state": 1,
+          "encoded_target": 1107,
+          "pd_thermal_level": 11,
+          "pd_fcc_ma": 2200
+        },
+        {
+          "virtual_board_mc": 42000,
+          "screen_state": 0,
+          "encoded_target": 1209,
+          "pd_thermal_level": 9,
+          "pd_fcc_ma": 3000
+        },
+        {
+          "virtual_board_mc": 42000,
+          "screen_state": 1,
+          "encoded_target": 1209,
+          "pd_thermal_level": 12,
+          "pd_fcc_ma": 1900
+        },
+        {
+          "virtual_board_mc": 45000,
+          "screen_state": 0,
+          "encoded_target": 1515,
+          "pd_thermal_level": 15,
+          "pd_fcc_ma": 300
+        },
+        {
+          "virtual_board_mc": 45000,
+          "screen_state": 1,
+          "encoded_target": 1515,
+          "pd_thermal_level": 15,
+          "pd_fcc_ma": 300
+        }
+      ]
+    },
+    "6": {
+      "file": "thermal-nolimits.conf",
+      "battery_section": "NOLIMITS-MONITOR-BAT",
+      "trig": [
+        35000,
+        35800,
+        36500,
+        39500,
+        41000,
+        42000,
+        43000
+      ],
+      "clr": [
+        33000,
+        35000,
+        35800,
+        38800,
+        39500,
+        41000,
+        42000
+      ],
+      "target": [
+        101,
+        404,
+        707,
+        1010,
+        1111,
+        1414,
+        1515
+      ],
+      "samples_rising_temperature": [
+        {
+          "virtual_board_mc": 35000,
+          "screen_state": 0,
+          "encoded_target": 101,
+          "pd_thermal_level": 1,
+          "pd_fcc_ma": 10000
+        },
+        {
+          "virtual_board_mc": 35000,
+          "screen_state": 1,
+          "encoded_target": 101,
+          "pd_thermal_level": 1,
+          "pd_fcc_ma": 10000
+        },
+        {
+          "virtual_board_mc": 36000,
+          "screen_state": 0,
+          "encoded_target": 404,
+          "pd_thermal_level": 4,
+          "pd_fcc_ma": 6600
+        },
+        {
+          "virtual_board_mc": 36000,
+          "screen_state": 1,
+          "encoded_target": 404,
+          "pd_thermal_level": 4,
+          "pd_fcc_ma": 6600
+        },
+        {
+          "virtual_board_mc": 36500,
+          "screen_state": 0,
+          "encoded_target": 707,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 36500,
+          "screen_state": 1,
+          "encoded_target": 707,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 37000,
+          "screen_state": 0,
+          "encoded_target": 707,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 37000,
+          "screen_state": 1,
+          "encoded_target": 707,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 37500,
+          "screen_state": 0,
+          "encoded_target": 707,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 37500,
+          "screen_state": 1,
+          "encoded_target": 707,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 38000,
+          "screen_state": 0,
+          "encoded_target": 707,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 38000,
+          "screen_state": 1,
+          "encoded_target": 707,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 39000,
+          "screen_state": 0,
+          "encoded_target": 707,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 39000,
+          "screen_state": 1,
+          "encoded_target": 707,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 42000,
+          "screen_state": 0,
+          "encoded_target": 1414,
+          "pd_thermal_level": 14,
+          "pd_fcc_ma": 1000
+        },
+        {
+          "virtual_board_mc": 42000,
+          "screen_state": 1,
+          "encoded_target": 1414,
+          "pd_thermal_level": 14,
+          "pd_fcc_ma": 1000
+        },
+        {
+          "virtual_board_mc": 45000,
+          "screen_state": 0,
+          "encoded_target": 1515,
+          "pd_thermal_level": 15,
+          "pd_fcc_ma": 300
+        },
+        {
+          "virtual_board_mc": 45000,
+          "screen_state": 1,
+          "encoded_target": 1515,
+          "pd_thermal_level": 15,
+          "pd_fcc_ma": 300
+        }
+      ]
+    },
+    "27": {
+      "file": "thermal-charge.conf",
+      "battery_section": "CHARGE-MONITOR-BAT",
+      "trig": [
+        32000,
+        34000,
+        37000,
+        37800,
+        38500,
+        40800,
+        41500,
+        43000,
+        44000,
+        45000
+      ],
+      "clr": [
+        30000,
+        32000,
+        35000,
+        37000,
+        37800,
+        38500,
+        40800,
+        41500,
+        43000,
+        44000
+      ],
+      "target": [
+        600,
+        800,
+        1001,
+        1104,
+        1107,
+        1207,
+        1210,
+        1411,
+        1414,
+        1515
+      ],
+      "samples_rising_temperature": [
+        {
+          "virtual_board_mc": 35000,
+          "screen_state": 0,
+          "encoded_target": 800,
+          "pd_thermal_level": 0,
+          "pd_fcc_ma": 12400
+        },
+        {
+          "virtual_board_mc": 35000,
+          "screen_state": 1,
+          "encoded_target": 800,
+          "pd_thermal_level": 8,
+          "pd_fcc_ma": 4400
+        },
+        {
+          "virtual_board_mc": 36000,
+          "screen_state": 0,
+          "encoded_target": 800,
+          "pd_thermal_level": 0,
+          "pd_fcc_ma": 12400
+        },
+        {
+          "virtual_board_mc": 36000,
+          "screen_state": 1,
+          "encoded_target": 800,
+          "pd_thermal_level": 8,
+          "pd_fcc_ma": 4400
+        },
+        {
+          "virtual_board_mc": 36500,
+          "screen_state": 0,
+          "encoded_target": 800,
+          "pd_thermal_level": 0,
+          "pd_fcc_ma": 12400
+        },
+        {
+          "virtual_board_mc": 36500,
+          "screen_state": 1,
+          "encoded_target": 800,
+          "pd_thermal_level": 8,
+          "pd_fcc_ma": 4400
+        },
+        {
+          "virtual_board_mc": 37000,
+          "screen_state": 0,
+          "encoded_target": 1001,
+          "pd_thermal_level": 1,
+          "pd_fcc_ma": 10000
+        },
+        {
+          "virtual_board_mc": 37000,
+          "screen_state": 1,
+          "encoded_target": 1001,
+          "pd_thermal_level": 10,
+          "pd_fcc_ma": 2600
+        },
+        {
+          "virtual_board_mc": 37500,
+          "screen_state": 0,
+          "encoded_target": 1001,
+          "pd_thermal_level": 1,
+          "pd_fcc_ma": 10000
+        },
+        {
+          "virtual_board_mc": 37500,
+          "screen_state": 1,
+          "encoded_target": 1001,
+          "pd_thermal_level": 10,
+          "pd_fcc_ma": 2600
+        },
+        {
+          "virtual_board_mc": 38000,
+          "screen_state": 0,
+          "encoded_target": 1104,
+          "pd_thermal_level": 4,
+          "pd_fcc_ma": 6600
+        },
+        {
+          "virtual_board_mc": 38000,
+          "screen_state": 1,
+          "encoded_target": 1104,
+          "pd_thermal_level": 11,
+          "pd_fcc_ma": 2200
+        },
+        {
+          "virtual_board_mc": 39000,
+          "screen_state": 0,
+          "encoded_target": 1107,
+          "pd_thermal_level": 7,
+          "pd_fcc_ma": 5000
+        },
+        {
+          "virtual_board_mc": 39000,
+          "screen_state": 1,
+          "encoded_target": 1107,
+          "pd_thermal_level": 11,
+          "pd_fcc_ma": 2200
+        },
+        {
+          "virtual_board_mc": 42000,
+          "screen_state": 0,
+          "encoded_target": 1210,
+          "pd_thermal_level": 10,
+          "pd_fcc_ma": 2600
+        },
+        {
+          "virtual_board_mc": 42000,
+          "screen_state": 1,
+          "encoded_target": 1210,
+          "pd_thermal_level": 12,
+          "pd_fcc_ma": 1900
+        },
+        {
+          "virtual_board_mc": 45000,
+          "screen_state": 0,
+          "encoded_target": 1515,
+          "pd_thermal_level": 15,
+          "pd_fcc_ma": 300
+        },
+        {
+          "virtual_board_mc": 45000,
+          "screen_state": 1,
+          "encoded_target": 1515,
+          "pd_thermal_level": 15,
+          "pd_fcc_ma": 300
+        }
+      ]
+    }
+  },
+  "thermal_limit_pd_ma": [
+    12400,
+    10000,
+    8800,
+    8000,
+    6600,
+    6000,
+    5500,
+    5000,
+    4400,
+    3000,
+    2600,
+    2200,
+    1900,
+    1500,
+    1000,
+    300
+  ],
+  "native_evidence": {
+    "generic_set_level": "battery targets >=100 use /100 with screen_state!=0, %100 with screen_state==0.",
+    "screen_state_callback": "Panel state 0 (unblank) -> screen_state 1; off/blank -> 0.",
+    "do_switch_config": "Reuses initialized sensors and replaces policy algorithm instances.",
+    "thermal_sconfig_store": "Stores mode and USB property; writes generate inotify events."
+  },
+  "scope": "Thermal policy conflict established offline; current charger PDO, virtual board temperature and CP operation are unobserved.",
+  "hardware_verified": false,
+  "validation": {
+    "shell_transition_snapshots": 13,
+    "bounded_startup_loop_passed": true,
+    "write_failure_and_restart_cases_passed": true,
+    "policy_neverallow_checks_enabled": true,
+    "effective_policy_decisions_passed": 23,
+    "local_pixelos_image_and_ota_checks_passed": true,
+    "public_tree_full_android_build_performed": false,
+    "phone_test_performed": false
+  }
+}

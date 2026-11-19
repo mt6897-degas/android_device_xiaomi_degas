@@ -52,3 +52,6 @@
 
 # Backlight sync
 /(vendor|system/vendor)/bin/degas-backlight-sync\.sh                                                   u:object_r:degas_backlight_sync_exec:s0
+
+# Factory charging thermal scenario selector
+/(vendor|system/vendor)/bin/degas-charger-thermal\.sh u:object_r:degas_charger_thermal_exec:s0

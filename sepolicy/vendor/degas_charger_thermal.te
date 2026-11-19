@@ -1,0 +1,11 @@
+type degas_charger_thermal, domain;
+type degas_charger_thermal_exec, exec_type, file_type, vendor_file_type;
+
+init_daemon_domain(degas_charger_thermal)
+
+allow degas_charger_thermal vendor_shell_exec:file rx_file_perms;
+allow degas_charger_thermal vendor_toolbox_exec:file rx_file_perms;
+r_dir_file(degas_charger_thermal, sysfs)
+r_dir_file(degas_charger_thermal, sysfs_batteryinfo)
+r_dir_file(degas_charger_thermal, sysfs_power_supply)
+rw_dir_file(degas_charger_thermal, sysfs_therm)
