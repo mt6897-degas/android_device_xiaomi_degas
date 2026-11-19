@@ -29,10 +29,10 @@ log.tag.libcomposer_ext=W
 # Media
 media.stagefright.thumbnail.prefer_hw_codecs=true
 
-# Verison
+# Version
 ro.mi.os.version.code=3
-ro.mi.os.version.incremental=OS3.0.4.0.WNEMIXM
-ro.miui.build.region=global
+ro.mi.os.version.incremental=OS3.0.306.0.WNEEUXM
+ro.miui.build.region=eea
 ro.product.marketname=Xiaomi 14T
 
 # MiuiCamera 6.7 is re-signed; skip its own signature self-check

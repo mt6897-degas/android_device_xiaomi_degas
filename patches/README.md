@@ -37,4 +37,4 @@ bash /path/to/evox-a17-degas/scripts/apply-patches.sh --status "$ANDROID_BUILD_T
 
 ## Optional camera zoom check (Android 17)
 
-If `camerahalserver` crashes during camera zoom on Android 17, check `vendor/lib64/mt6897/lib3a.awb.core.so` against `Evolution-X-Devices/device_xiaomi_duchamp` commit `1110be6` (not pre-applied blindly because `degas` uses `OS3.0.4.0.WNEMIXM` while `duchamp` targets `OS3.0.10.0.WNLMIXM`).
+If `camerahalserver` crashes during camera zoom on Android 17, check `vendor/lib64/mt6897/lib3a.awb.core.so` against `Evolution-X-Devices/device_xiaomi_duchamp` commit `1110be6` (not pre-applied blindly because `degas` uses `OS3.0.306.0.WNEEUXM` while `duchamp` targets `OS3.0.10.0.WNLMIXM`).

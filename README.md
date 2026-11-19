@@ -9,7 +9,7 @@ codename `degas` (MediaTek Dimensity 8300-Ultra, MT6897).
 | GPU       | Mali-G615 MC6                                       |
 | Display   | 6.67" AMOLED, 1220x2712, 144 Hz                     |
 | ROM       | Evolution X 12.4 (`cnb`, Android 17 / `cp2a`)       |
-| Base FW   | HyperOS `OS3.0.4.0.WNEMIXM` (prebuilt GKI 6.1)      |
+| Base FW   | HyperOS `OS3.0.306.0.WNEEUXM` (EEA, GKI 6.1.157, SPL 2026-08-01) |
 
 ## Phase 1: `vendor_boot.img` bring-up (no vendor blobs required)
 
@@ -26,6 +26,10 @@ cp /path/to/evox-a17-degas/manifests/evox-degas-cnb.xml .repo/local_manifests/
 # Place this tree at device/xiaomi/degas (clone or copy)
 repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
+# Refresh device/xiaomi/degas-kernel with 3.0.306 GKI 6.1.157 kernel, DTB, and .ko modules
+# and unpack OS3.0.306.0.WNEEUXM partitions into ~/dump-306/root
+bash /path/to/evox-a17-degas/scripts/prepare-306-base.sh "$PWD" ~/dump-306 --download
+
 bash /path/to/evox-a17-degas/scripts/build-vendor-boot.sh "$PWD"
 ```
 
@@ -35,8 +39,8 @@ header v4, <= 64 MiB, touch fix `enable_touch_raw 0` + recovery touch modules).
 ## Phase 2: Full Evolution X 12.4 (Android 17) ROM
 
 `extract-files.py` and `proprietary-files.txt` are pre-ported to Android 17
-(`cnb`) MT6897 requirements (all source libraries verified against stock
-`OS3.0.4.0.WNEMIXM`):
+(`cnb`) MT6897 requirements (all top-level vendor `.so` and `init/*.rc` paths
+verified against stock `OS3.0.306.0.WNEEUXM`, `pq_aidl` bumped to v7):
 - **Keymint V3 split:** `libkeymint_V3.so`, `libkeymint_remote_prov_support_V3.so`,
   `libcppcose_rkp-V3.so` + AOSP `lib_android_keymaster_keymint_utils_V3` /
   `libkeymint_support_V3` + compat `libbase-v34.so`.
@@ -50,10 +54,10 @@ header v4, <= 64 MiB, touch fix `enable_touch_raw 0` + recovery touch modules).
   `mnld` -> `libmnl-v34.so`, `tee-supplicant.rc` `/dev/ufs-bsg0` ownership fix.
 
 Steps on build server:
-1. Extract blobs from stock `OS3.0.4.0.WNEMIXM` dump:
+1. Extract blobs from the unpacked `OS3.0.306.0.WNEEUXM` dump created by `prepare-306-base.sh`:
    ```sh
    cd device/xiaomi/degas
-   ./extract-files.py /path/to/OS3.0.4.0.WNEMIXM-dump
+   ./extract-files.py ~/dump-306/root
    ./fix-generated-bp.py
    ```
 2. Strip firmware lines (`AB_OTA_PARTITIONS` / `add-radio-file`) from

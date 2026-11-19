@@ -25,17 +25,18 @@ VENDOR = path.join(
     '..', '..', '..', 'vendor', 'xiaomi', 'degas', 'proprietary',
 )
 
-# ImsService.apk carries a smali edit that exports the receiver Android 14+
+# ImsService.apk carries a smali edit that exports receivers Android 14+
 # refuses to register unexported. Without it com.mediatek.ims crash-loops and
 # takes the boot-time notification shade with it. A re-extract silently
 # restores the stock dex.
 IMS_SERVICE = 'system_ext/priv-app/ImsService/ImsService.apk'
-# Reconciled 2026-11-15 against the hash-verified r4 system_ext payload.
-# All 4,872 disassembled classes were compared with exact OS3.0.4.0 stock:
-# only WfcHandler.registerForBroadcast changes behavior (.registers 5 and
-# registerReceiver(..., RECEIVER_EXPORTED)); three omitted static false
-# initializers retain their default values. See notes/STATE.md in the workspace.
-# Do not accept the historical, unavailable 2e3d... build without a new audit.
+# Verified hashes from OS3.0.4.0.WNEMIXM (retained as known-good baseline).
+# When extracting from OS3.0.306.0.WNEEUXM, if the dex sha1 differs:
+#   1. Disassemble WfcHandler.registerForBroadcast (and any unexported
+#      registerReceiver calls) with baksmali/apktool and confirm RECEIVER_EXPORTED
+#      (0x2) is passed.
+#   2. Update IMS_PATCHED_DEX_SHA1 / IMS_PATCHED_DEX_SHA256 below with the
+#      verified 3.0.306 patched dex hashes.
 IMS_PATCHED_DEX_SHA1 = '23b5d912d4fe689d25a833ef9963429cafcf2ea0'
 IMS_PATCHED_DEX_SHA256 = '7dbbd980366c098303970690be12523020e2a4db786db797251f3721ade0fbfd'
 IMS_STOCK_DEX_SHA1 = '137fa86d1d7a84bf7295b736b157cadae656069a'

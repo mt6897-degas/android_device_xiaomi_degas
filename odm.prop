@@ -1,7 +1,7 @@
-# Camera (stock OS3.0.4.0.WNEMIXM)
+# Camera (stock OS3.0.306.0.WNEEUXM)
 ro.product.camera.livephoto.support=3
 
-# Charger
+# Charger (GL profile avoids regional charge throttling)
 persist.vendor.accelerate.charge=true
 persist.vendor.region.charger=GL
 

@@ -1,4 +1,4 @@
-# Unpinned blobs from degas_global-user 16 BP2A.250605.031.A3 OS3.0.4.0.WNEMIXM release-keys
+# Unpinned blobs from degas_eea-user 16 BP2A.250605.031.A3 OS3.0.306.0.WNEEUXM release-keys
 
 # AEE
 vendor/lib64/libaedv.so

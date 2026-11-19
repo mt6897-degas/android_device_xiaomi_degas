@@ -25,10 +25,10 @@
           - external/wpa_supplicant_8         (default.xml, lineage-24.0)
 
         Phase 2 (full ROM):
-          - Extract vendor/xiaomi/degas from OS3.0.4.0.WNEMIXM (see patches/README.md
-            for Android 17 Keymint V3 / Codec2 -v34 / libsink-mtk / mnld requirements).
-          - Cherry-pick the MTK gen4m WPA3/SAE exemption commit onto Android 17's
-            external/wpa_supplicant_8 instead of replacing it with the Android 16 fork.
+          - Run scripts/prepare-306-base.sh to refresh device/xiaomi/degas-kernel
+            with OS3.0.306.0.WNEEUXM kernel 6.1.157, DTB, and .ko modules and
+            unpack the 3.0.306 partition dump for extract-files.py.
+          - Apply all 8 Evolution X cnb patches via scripts/apply-patches.sh.
     -->
 
     <!-- Prebuilt GKI kernel, DTB and kernel modules -->
