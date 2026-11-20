@@ -151,6 +151,9 @@ include device/mediatek/sepolicy_vndr/SEPolicy.mk
 BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
 BOARD_SEPOLICY_DIRS += vendor/xiaomi/degas-dolby/fx/sepolicy/vendor
 BOARD_SEPOLICY_DIRS += vendor/xiaomi/degas-dolby/codec/sepolicy/vendor
+ifneq ($(wildcard vendor/xiaomi/degas-charge/sepolicy/vendor),)
+BOARD_SEPOLICY_DIRS += vendor/xiaomi/degas-charge/sepolicy/vendor
+endif
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 
 # Verified Boot

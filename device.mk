@@ -151,8 +151,8 @@ PRODUCT_PACKAGES += \
 
 # Health
 PRODUCT_PACKAGES += \
-    android.hardware.health-service.mediatek \
-    android.hardware.health-service.mediatek-recovery
+    android.hardware.health-service.degas \
+    android.hardware.health-service.degas-recovery
 
 # Health (Lineage charging control)
 PRODUCT_PACKAGES += \
@@ -405,3 +405,5 @@ $(call inherit-product, vendor/xiaomi/degas-dolby/fx/fx.mk)
 DEGAS_DOLBY_VISION := true
 DEGAS_DOLBY_VISION_ABI_REVIEWED := true
 $(call inherit-product, vendor/xiaomi/degas-dolby/codec/codec.mk)
+
+$(call inherit-product-if-exists, vendor/xiaomi/degas-charge/charge.mk)
