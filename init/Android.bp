@@ -78,3 +78,10 @@ sh_binary {
     filename: "degas-backlight-sync.sh",
     vendor: true,
 }
+
+prebuilt_etc {
+    name: "init.misys.rc",
+    src: "init.misys.rc",
+    relative_install_path: "init",
+    vendor: true,
+}

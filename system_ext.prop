@@ -37,3 +37,7 @@ ro.product.marketname=Xiaomi 14T
 
 # MiuiCamera 6.7 is re-signed; skip its own signature self-check
 camera.debug.safe.check.disable=true
+
+# Camera (must live on system_ext so init sets exported_system_prop)
+ro.product.camera.livephoto.support=3
+ro.theme_customize=LCC

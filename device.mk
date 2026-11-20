@@ -176,6 +176,7 @@ PRODUCT_PACKAGES += \
     init.cgroup.rc \
     init.connectivity.rc \
     init.fingerprint.rc \
+    init.misys.rc \
     init.mt6897.rc \
     init.mt6897.usb.rc \
     init.project.rc \

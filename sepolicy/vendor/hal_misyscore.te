@@ -1,0 +1,4 @@
+binder_call(hal_misyscore_client, hal_misyscore_server)
+binder_call(hal_misyscore_server, hal_misyscore_client)
+
+hal_attribute_service(hal_misyscore, hal_misyscore_service)

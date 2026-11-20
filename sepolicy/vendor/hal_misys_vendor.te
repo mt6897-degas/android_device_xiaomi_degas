@@ -1,0 +1,5 @@
+binder_call(hal_misys_vendor_client, hal_misys_vendor_server)
+binder_call(hal_misys_vendor_server, hal_misys_vendor_client)
+
+allow hal_misys_vendor_client hal_misys_vendor_service:service_manager find;
+add_service(hal_misys_vendor_server, hal_misys_vendor_service)

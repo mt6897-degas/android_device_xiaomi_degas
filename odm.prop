@@ -1,5 +1,4 @@
 # Camera (stock OS3.0.4.0.WNEMIXM)
-ro.product.camera.livephoto.support=3
 
 # Charger
 persist.vendor.accelerate.charge=true
