@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<displayConfiguration>
+    <screenBrightnessMap>
+        <point>
+            <value>0.000854597</value>
+            <nits>2.0</nits>
+        </point>
+        <point>
+            <value>0.499938</value>
+            <nits>500.0</nits>
+        </point>
+        <point>
+            <value>0.699914540</value>
+            <nits>700.0</nits>
+        </point>
+        <point>
+            <value>0.952386766</value>
+            <nits>1600.0</nits>
+        </point>
+        <point>
+            <value>1.0</value>
+            <nits>4500.0</nits>
+        </point>
+    </screenBrightnessMap>
+    <highBrightnessMode enabled="true">
+        <transitionPoint>0.499938</transitionPoint>
+        <minimumLux>5882</minimumLux>
+        <timing>
+            <timeWindowSecs>1800</timeWindowSecs>
+            <timeMaxSecs>300</timeMaxSecs>
+            <timeMinSecs>60</timeMinSecs>
+        </timing>
+        <thermalStatusLimit>critical</thermalStatusLimit>
+        <allowInLowPowerMode>true</allowInLowPowerMode>
+        <minimumHdrPercentOfScreen>0</minimumHdrPercentOfScreen>
+        <sdrHdrRatioMap>
+            <point>
+                <sdrNits>2.0</sdrNits>
+                <hdrRatio>8.0</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>1200.0</sdrNits>
+                <hdrRatio>8.0</hdrRatio>
+            </point>
+        </sdrHdrRatioMap>
+    </highBrightnessMode>
+    <ambientLightHorizonLong>1500</ambientLightHorizonLong>
+    <ambientLightHorizonShort>1000</ambientLightHorizonShort>
+</displayConfiguration>
