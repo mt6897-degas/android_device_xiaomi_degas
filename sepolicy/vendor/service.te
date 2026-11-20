@@ -13,5 +13,9 @@ type hal_mlipay_service, protected_service, service_manager_type, hal_service_ty
 # Mtdservice
 type hal_mtdservice_service, protected_service, service_manager_type, hal_service_type;
 
+# MiSys / HypSys
+type hal_misys_vendor_service, protected_service, service_manager_type, hal_service_type;
+type hal_misyscore_service, protected_service, service_manager_type, hal_service_type;
+
 # Touch
 type vendor_hal_touchfeature_service, protected_service, service_manager_type, hal_service_type;

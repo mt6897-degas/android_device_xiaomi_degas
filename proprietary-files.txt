@@ -210,8 +210,9 @@ vendor/lib64/libbt-vendor.so
 
 # Bluetooth (A2DP)
 vendor/lib64/vendor.mediatek.hardware.bluetooth.audio-V1-ndk.so
-vendor/lib64/vendor.mediatek.hardware.bluetooth.audio@2.1.so
-vendor/lib64/vendor.mediatek.hardware.bluetooth.audio@2.2.so
+# Built from source by hardware/mediatek/interfaces/hardware/bluetooth/audio
+# vendor/lib64/vendor.mediatek.hardware.bluetooth.audio@2.1.so
+# vendor/lib64/vendor.mediatek.hardware.bluetooth.audio@2.2.so
 
 # Camera
 odm/lib64/camera/plugins/com.xiaomi.plugin.arcsoftsr.so
@@ -670,7 +671,8 @@ vendor/lib64/vendor.mediatek.hardware.camera.frhandler@1.0.so
 vendor/lib64/vendor.mediatek.hardware.camera.isphal-V1-ndk.so
 vendor/lib64/vendor.mediatek.hardware.camera.postproc@1.0.so
 vendor/lib64/vendor.mediatek.hardware.camera.security@1.0.so
-vendor/lib64/vendor.mediatek.hardware.mtkpower-V1-ndk.so
+# Built from source by hardware/mediatek/interfaces/hardware/mtkpower/aidl (vendor_available: true)
+# vendor/lib64/vendor.mediatek.hardware.mtkpower-V1-ndk.so
 vendor/lib64/vendor.xiaomi.hardware.bgservice@1.0.so
 
 # Camera (Configs)
@@ -1609,7 +1611,8 @@ odm/etc/camera/129_LeicaVivid.png
 odm/etc/camera/130_LeicaNatural.png
 odm/etc/camera/131_MonochromeTrue.png
 odm/etc/camera/132_MonochromeHighContrast.png
-odm/etc/camera/133_MonochromeBrown.png
+# Replaced by Leica I Model A video LUT (vendor/xiaomi/miuicamera)
+# odm/etc/camera/133_MonochromeBrown.png
 odm/etc/camera/134_MonochromeBlue.png
 odm/etc/camera/135_Classical.png
 odm/etc/camera/136_Filene.png
@@ -3176,7 +3179,7 @@ vendor/lib64/vendor.xiaomi.hardware.aidlbgservice-V1-impl.so
 vendor/lib64/vendor.xiaomi.hardware.aidlbgservice-V1-ndk.so
 vendor/lib64/vendor.xiaomi.hardware.bgservice@1.0-impl.so
 vendor/lib64/vendor.xiaomi.hardware.quickcamera-V1-ndk_platform.so
-vendor/lib64/vendor.xiaomi.hw.touchfeature-V1-ndk.so
+vendor/lib64/vendor.xiaomi.hw.touchfeature-V1-ndk.so;MODULE_SUFFIX=-vendor
 
 # Stock Wifi resource RRO overlays (prebuilt, keep signature)
 
@@ -3225,3 +3228,14 @@ vendor/etc/permissions/camera_extensions.xml
 vendor/framework/androidx.camera.extensions.impl.jar:vendor/framework/androidx.camera.extensions.impl.xiaomi.jar
 vendor/lib64/libcom.xiaomi.hwadapter.decoupleutil.so;MODULE_SUFFIX=-vendor
 vendor/lib64/libcom.xiaomi.hwadapter.postprocinterface.so;MODULE_SUFFIX=-vendor
+vendor/lib64/libcom.xiaomi.ionutils.so
+vendor/lib64/android.frameworks.displayservice@1.0.so
+
+# MiSys / HypSys vendor AIDL service (Leica Watermark persistence in /mnt/vendor/persist/camera)
+vendor/bin/hypsys_vendor
+vendor/bin/hw/vendor.xiaomi.hardware.misys.core-service
+vendor/etc/init/vendor.xiaomi.hardware.misys.core-service.rc
+vendor/lib64/vendor.xiaomi.hardware.misys.common-V3-ndk.so
+vendor/lib64/vendor.xiaomi.hardware.misys.core-V1-ndk.so
+vendor/lib64/vendor.xiaomi.hardware.mtkblackbox-V2-ndk.so
+vendor/lib64/xiaomi.system.hypsys.common-V1-ndk.so

@@ -2,3 +2,8 @@ rw_dir_file(hal_health_default, sysfs_power_supply)
 
 # charger_gl exposes the second charger's power_supply nodes.
 r_dir_file(hal_health_default, sysfs_batteryinfo)
+
+# Read power_supply symlinks and Xiaomi charger sysfs nodes under /sys/class/power_supply
+# (usb, cp_master, cp_slave, battery) if any path carries the generic sysfs label.
+allow hal_health_default sysfs:file r_file_perms;
+allow hal_health_default sysfs:lnk_file r_file_perms;

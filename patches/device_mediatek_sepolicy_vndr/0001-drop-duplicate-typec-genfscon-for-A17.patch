@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: saiquer <85092544+saiquer@users.noreply.github.com>
+Date: Thu, 19 Nov 2026 09:04:00 +0000
+Subject: [PATCH] sepolicy_vndr: drop duplicate /class/typec genfscon for A17
+
+Android 17 plat_sepolicy_genfs_202604.cil labels /sys/class/typec as
+sysfs_typec, conflicting with genfscon sysfs /class/typec sysfs_usb_nonplat.
+Drop the duplicate genfscon and allow mtk_hal_usb access to sysfs_typec.
+---
+ base/vendor/genfs_contexts | 1 -
+ base/vendor/mtk_hal_usb.te | 4 ++++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/base/vendor/genfs_contexts b/base/vendor/genfs_contexts
+index 9c3de9d..6ce96e3 100644
+--- a/base/vendor/genfs_contexts
++++ b/base/vendor/genfs_contexts
+@@ -234,7 +234,6 @@ genfscon sysfs /devices/platform/1000d000.pwrap/1000d000.pwrap:main_pmic/mt6397-
+ genfscon sysfs /devices/platform/soc/1000d000.pwrap/1000d000.pwrap:main_pmic/mt6397-rtc/rtc                         u:object_r:sysfs_rtc:s0
+ genfscon sysfs /devices/platform/10026000.pwrap/10026000.pwrap:mt6359-pmic/mt6359-rtc/rtc                           u:object_r:sysfs_rtc:s0
+ genfscon sysfs /devices/platform/10026000.pwrap/10026000.pwrap:mt6359p/mt6359p-rtc/rtc                              u:object_r:sysfs_rtc:s0
+-genfscon sysfs /class/typec                                                                                         u:object_r:sysfs_usb_nonplat:s0
+ genfscon sysfs /devices/platform/mt_usb/musb-hdrc/dual_role_usb                                                     u:object_r:sysfs_usb_nonplat:s0
+ genfscon sysfs /devices/platform/mt_usb/musb-hdrc/cmode                                                             u:object_r:sysfs_usb_nonplat:s0
+ genfscon sysfs /devices/platform/11270000.usb3/musb-hdrc/cmode                                                      u:object_r:sysfs_usb_nonplat:s0
+diff --git a/base/vendor/mtk_hal_usb.te b/base/vendor/mtk_hal_usb.te
+index ae777d9..659ed9f 100644
+--- a/base/vendor/mtk_hal_usb.te
++++ b/base/vendor/mtk_hal_usb.te
+@@ -18,3 +18,7 @@ allow mtk_hal_usb functionfs:dir { watch watch_reads };
+ 
+ set_prop(mtk_hal_usb, vendor_mtk_usb_prop)
+ get_prop(mtk_hal_usb, usb_control_prop)
++
++# A17 labels /sys/class/typec as sysfs_typec in plat_sepolicy_genfs_202604
++r_dir_file(mtk_hal_usb, sysfs_typec)
++allow mtk_hal_usb sysfs_typec:file w_file_perms;

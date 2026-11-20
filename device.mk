@@ -151,8 +151,8 @@ PRODUCT_PACKAGES += \
 
 # Health
 PRODUCT_PACKAGES += \
-    android.hardware.health-service.mediatek \
-    android.hardware.health-service.mediatek-recovery
+    android.hardware.health-service.degas \
+    android.hardware.health-service.degas-recovery
 
 # Health (Lineage charging control)
 PRODUCT_PACKAGES += \
@@ -176,6 +176,7 @@ PRODUCT_PACKAGES += \
     init.cgroup.rc \
     init.connectivity.rc \
     init.fingerprint.rc \
+    init.misys.rc \
     init.mt6897.rc \
     init.mt6897.usb.rc \
     init.project.rc \
@@ -280,10 +281,14 @@ PRODUCT_PACKAGES += \
 # mediatek-telephony-common and mediatek-telecom-common are put on the
 # bootclasspath by hardware/mediatek/frameworks/mediatek-frameworks.mk.
 PRODUCT_BOOT_JARS += \
-    xiaomi-telephony-stub \
+    xiaomi-telephony-stub
+
+ifneq ($(wildcard vendor/xiaomi/degas/degas-vendor.mk),)
+PRODUCT_BOOT_JARS += \
     mediatek-telephony-base \
     mediatek-ims-common \
     mediatek-ims-base
+endif
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/permissions/privapp-permissions-com.mediatek.ims.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-com.mediatek.ims.xml \
@@ -334,22 +339,29 @@ PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
     hardware/google/interfaces \
     hardware/google/pixel \
+    hardware/google/pixel/pixelstats \
+    hardware/google/pixel/power-libperfmgr \
     hardware/lineage/interfaces/power-libperfmgr \
     hardware/mediatek \
     hardware/mediatek/libmtkperf_client \
     hardware/xiaomi
 
 # Touchscreen
+$(call soong_config_set_bool,xiaomi,disable_touchfeature_aidl,true)
+
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml
 
 # Thermal
 PRODUCT_PACKAGES += \
-    android.hardware.thermal-service.mediatek
+    android.hardware.thermal-service.mediatek \
+    libperfmgr.vendor \
+    pixelatoms-cpp
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal_info_config.json:$(TARGET_COPY_OUT_VENDOR)/etc/thermal_info_config.json \
-    $(LOCAL_PATH)/configs/thermald-devices.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermald-devices.conf
+    $(LOCAL_PATH)/configs/thermald-devices.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermald-devices.conf \
+    $(LOCAL_PATH)/configs/thermal-nolimits.conf:$(TARGET_COPY_OUT_ODM)/etc/thermal-nolimits.conf
 
 # Verified boot
 PRODUCT_COPY_FILES += \
@@ -407,3 +419,7 @@ $(call inherit-product-if-exists, vendor/xiaomi/degas-dolby/fx/fx.mk)
 DEGAS_DOLBY_VISION := false
 DEGAS_DOLBY_VISION_ABI_REVIEWED := false
 $(call inherit-product-if-exists, vendor/xiaomi/degas-dolby/codec/codec.mk)
+
+# Xiaomi charging stack (micharge, batteryantiaging, charge_logger). The files live outside
+# this repository; the lane is skipped when it is not staged.
+$(call inherit-product-if-exists, vendor/xiaomi/degas-charge/charge.mk)

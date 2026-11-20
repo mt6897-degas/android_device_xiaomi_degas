@@ -45,7 +45,8 @@ lib_fixups: lib_fixups_user_type = {
      'libmialgo_utils',
      'libremosaic_wrapper',
      'vendor.mediatek.hardware.mbrain-V2-ndk',
-     'vendor.mediatek.hardware.pq_aidl-V7-ndk'): lib_fixup_vendor_suffix,
+     'vendor.mediatek.hardware.pq_aidl-V7-ndk',
+     'vendor.xiaomi.hw.touchfeature-V1-ndk'): lib_fixup_vendor_suffix,
 }
 
 
@@ -58,7 +59,6 @@ blob_fixups: blob_fixups_user_type = {
         .replace_needed('android.hardware.audio@7.1-util.so', 'android.hardware.audio@7.1-util-v34.so'),
 
     'vendor/lib64/hw/android.hardware.soundtrigger3-impl.so': blob_fixup()
-        .replace_needed('android.hardware.soundtrigger3-V1-ndk.so', 'android.hardware.soundtrigger3-V3-ndk.so')
         .replace_needed('libaudio_aidl_conversion_common_ndk.so', 'libaudio_aidl_conversion_common_ndk-v34.so'),
 
     'vendor/lib64/vendor.mediatek.hardware.bluetooth.audio-V1-ndk.so': blob_fixup()
@@ -143,9 +143,13 @@ blob_fixups: blob_fixups_user_type = {
     # names. The mismatch corrupts the heap in the vendor tract - caught with
     # malloc_debug guard on 2026-08-16 (CORRUPTED REAR GUARD in
     # RealtimePostProcessor::deleteRecord) and gone once these are relinked.
-    ('vendor/lib64/libmicamera_hal_core.so',
-     'vendor/lib64/libcom.xiaomi.ecoenginemonitor.so',
+    'vendor/lib64/libmicamera_hal_core.so': blob_fixup()
+        .replace_needed('libui.so', 'libui-v34.so')
+        .replace_needed('libtinyxml2.so', 'libtinyxml2-v34.so'),
+
+    ('vendor/lib64/libcom.xiaomi.ecoenginemonitor.so',
      'vendor/lib64/libcom.xiaomi.grallocutils.so',
+     'vendor/lib64/libcom.xiaomi.ionutils.so',
      'vendor/lib64/libcom.xiaomi.pluginutils.so',
      'vendor/lib64/libcom.xiaomi.sensorpolicy.so',
      'vendor/lib64/libecoengine.so',
@@ -171,8 +175,11 @@ blob_fixups: blob_fixups_user_type = {
     'odm/lib64/libmiremosaic.so': blob_fixup()
         .add_needed('libremosaic_wrapper.so'),
 
-    ('odm/lib64/hw/displayfeature.default.so',
+    ('odm/lib64/camera/plugins/com.xiaomi.plugin.mialgoainr.so',
+     'odm/lib64/hw/displayfeature.default.so',
+     'vendor/lib64/libHardwareBacklightcore.so',
      'vendor/lib64/libaudiocloudctrl.so',
+     'vendor/lib64/libmicamera_aidl_provider.so',
      'vendor/lib64/libpqxmlflagparser.so',
      'vendor/lib64/libpqxmlparser.so',
      'vendor/lib64/librt_extamp_intf.so',
@@ -285,6 +292,10 @@ blob_fixups: blob_fixups_user_type = {
     'vendor/etc/permissions/camera_extensions.xml': blob_fixup()
         .regex_replace(r'/androidx\.camera\.extensions\.impl\.jar',
                        '/androidx.camera.extensions.impl.xiaomi.jar'),
+
+    # Android 14+ requires RECEIVER_EXPORTED on dynamic broadcast receivers.
+    'system_ext/priv-app/ImsService/ImsService.apk': blob_fixup()
+        .apktool_patch('blob-patches/ImsService'),
 }  # fmt: skip
 
 module = ExtractUtilsModule(
@@ -293,7 +304,7 @@ module = ExtractUtilsModule(
     blob_fixups=blob_fixups,
     lib_fixups=lib_fixups,
     namespace_imports=namespace_imports,
-    add_firmware_proprietary_file=True,
+    add_firmware_proprietary_file=False,
 )
 
 if __name__ == '__main__':

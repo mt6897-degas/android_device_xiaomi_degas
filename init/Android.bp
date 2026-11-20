@@ -38,6 +38,13 @@ prebuilt_etc {
 }
 
 prebuilt_etc {
+    name: "init.misys.rc",
+    src: "init.misys.rc",
+    relative_install_path: "init",
+    vendor: true,
+}
+
+prebuilt_etc {
     name: "init.mt6897.rc",
     src: "init.mt6897.rc",
     relative_install_path: "init/hw",

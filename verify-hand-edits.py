@@ -30,16 +30,10 @@ VENDOR = path.join(
 # takes the boot-time notification shade with it. A re-extract silently
 # restores the stock dex.
 IMS_SERVICE = 'system_ext/priv-app/ImsService/ImsService.apk'
-# Verified hashes from OS3.0.4.0.WNEMIXM (retained as known-good baseline).
-# When extracting from OS3.0.306.0.WNEEUXM, if the dex sha1 differs:
-#   1. Disassemble WfcHandler.registerForBroadcast (and any unexported
-#      registerReceiver calls) with baksmali/apktool and confirm RECEIVER_EXPORTED
-#      (0x2) is passed.
-#   2. Update IMS_PATCHED_DEX_SHA1 / IMS_PATCHED_DEX_SHA256 below with the
-#      verified 3.0.306 patched dex hashes.
-IMS_PATCHED_DEX_SHA1 = '23b5d912d4fe689d25a833ef9963429cafcf2ea0'
-IMS_PATCHED_DEX_SHA256 = '7dbbd980366c098303970690be12523020e2a4db786db797251f3721ade0fbfd'
-IMS_STOCK_DEX_SHA1 = '137fa86d1d7a84bf7295b736b157cadae656069a'
+# Verified hashes from OS3.0.306.0.WNEEUXM (patched via blob-patches/ImsService).
+IMS_PATCHED_DEX_SHA1 = '0b3400a9408f60fd1b30b4dcc3a2be05117be5fb'
+IMS_PATCHED_DEX_SHA256 = '95a155d78c023a1ad09633fcd4bc520a910adef8640de0682eb60e630dead0d0'
+IMS_STOCK_DEX_SHA1 = '46b15a0842b66bf4b584095a58d13ad217152559'
 
 
 def classify_ims_dex(dex: bytes) -> str:

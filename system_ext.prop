@@ -35,5 +35,9 @@ ro.mi.os.version.incremental=OS3.0.306.0.WNEEUXM
 ro.miui.build.region=eea
 ro.product.marketname=Xiaomi 14T
 
+# Camera (stock OS3.0.306.0.WNEEUXM; must live on system_ext so init sets exported_system_prop)
+ro.product.camera.livephoto.support=3
+
 # MiuiCamera 6.7 is re-signed; skip its own signature self-check
 camera.debug.safe.check.disable=true
+ro.theme_customize=LCC

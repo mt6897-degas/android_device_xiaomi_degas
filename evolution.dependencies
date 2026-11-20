@@ -18,9 +18,9 @@
     "branch": "cnb"
   },
   {
-    "remote": "evo-devices",
-    "repository": "device_mediatek_sepolicy_vndr",
+    "remote": "github",
+    "repository": "LineageOS/android_device_mediatek_sepolicy_vndr",
     "target_path": "device/mediatek/sepolicy_vndr",
-    "branch": "cnb"
+    "branch": "lineage-23.2"
   }
 ]

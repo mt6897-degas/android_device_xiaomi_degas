@@ -17,3 +17,12 @@ attribute hal_mlipay_server;
 attribute hal_mtdservice;
 attribute hal_mtdservice_client;
 attribute hal_mtdservice_server;
+
+# MiSys / HypSys
+attribute hal_misys_vendor;
+attribute hal_misys_vendor_client;
+attribute hal_misys_vendor_server;
+
+attribute hal_misyscore;
+attribute hal_misyscore_client;
+attribute hal_misyscore_server;

@@ -155,6 +155,10 @@ endif
 ifneq ($(wildcard vendor/xiaomi/degas-dolby/codec/sepolicy/vendor),)
 BOARD_SEPOLICY_DIRS += vendor/xiaomi/degas-dolby/codec/sepolicy/vendor
 endif
+# Xiaomi charging stack, only when the lane is staged (it lives outside this repository).
+ifneq ($(wildcard vendor/xiaomi/degas-charge/sepolicy/vendor),)
+BOARD_SEPOLICY_DIRS += vendor/xiaomi/degas-charge/sepolicy/vendor
+endif
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 
 # Verified Boot

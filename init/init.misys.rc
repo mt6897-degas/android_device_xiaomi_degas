@@ -1,0 +1,15 @@
+on fs
+    mkdir /mnt/vendor/persist/misys 0755 system system
+    mkdir /mnt/vendor/persist/camera 0775 system cameraserver
+
+on post-fs
+    start vendor.misys.common
+
+service vendor.misys.common /vendor/bin/hypsys_vendor
+    class main
+    user system
+    group system log cache everybody media_rw
+    interface aidl vendor.xiaomi.hardware.misys.common.IMiSysImpl/default
+    interface aidl vendor.xiaomi.hardware.misys.common.IHypSysIntl/default
+    interface aidl vendor.xiaomi.hardware.mtkblackbox.IMtkblackboxImpl/default
+    disabled

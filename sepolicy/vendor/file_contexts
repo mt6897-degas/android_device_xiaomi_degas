@@ -40,6 +40,9 @@
 # Touch
 /dev/xiaomi-touch                                                                                      u:object_r:touchfeature_device:s0
 
+# Health
+/(vendor|system/vendor)/bin/hw/android\.hardware\.health-service\.degas                                u:object_r:hal_health_default_exec:s0
+
 # Thermal
 /(vendor|system/vendor)/bin/mi_thermald                                                                u:object_r:vendor_mi_thermald_exec:s0
 
@@ -51,3 +54,7 @@
 
 # Backlight sync
 /(vendor|system/vendor)/bin/degas-backlight-sync\.sh                                                   u:object_r:degas_backlight_sync_exec:s0
+
+# MiSys / HypSys
+/(vendor|system/vendor)/bin/hypsys_vendor                                                              u:object_r:hal_misys_vendor_default_exec:s0
+/(vendor|system/vendor)/bin/hw/vendor\.xiaomi\.hardware\.misys\.core-service                           u:object_r:hal_misyscore_default_exec:s0

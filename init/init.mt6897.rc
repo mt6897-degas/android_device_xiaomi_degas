@@ -95,9 +95,9 @@ on post-fs-data
     #XIAOMI: Create camera directory for calibration file --end
 
     #XIAOMI: Create camera directory for calibration file --start
-    mkdir mnt/vendor/persist/camera
-    chown system cameraserver mnt/vendor/persist/camera
-    chmod 755 mnt/vendor/persist/camera
+    mkdir /mnt/vendor/persist/camera 0775 system cameraserver
+    chown system cameraserver /mnt/vendor/persist/camera
+    chmod 0775 /mnt/vendor/persist/camera
 
     mkdir /data/vendor/camera
     chown root system /data/vendor/camera
