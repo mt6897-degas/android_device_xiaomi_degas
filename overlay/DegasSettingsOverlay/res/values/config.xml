@@ -66,4 +66,6 @@
 
     <!-- The radius of the enrollment progress bar, in dp -->
     <integer name="config_udfpsEnrollProgressBar">90</integer>
+    <!-- mifaced owns the front camera during face enrollment and renders to previewSurface -->
+    <bool name="config_face_enroll_hal_owns_camera">true</bool>
 </resources>
