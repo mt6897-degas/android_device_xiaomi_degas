@@ -424,3 +424,11 @@ $(call inherit-product-if-exists, vendor/xiaomi/degas-dolby/codec/codec.mk)
 # Xiaomi charging stack (micharge, batteryantiaging, charge_logger). The files live outside
 # this repository; the lane is skipped when it is not staged.
 $(call inherit-product-if-exists, vendor/xiaomi/degas-charge/charge.mk)
+
+# eSIM (eUICC + MEP + OpenEUICC privileged LPA)
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.telephony.euicc.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/android.hardware.telephony.euicc.xml \
+    frameworks/native/data/etc/android.hardware.telephony.euicc.mep.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/android.hardware.telephony.euicc.mep.xml
+
+PRODUCT_PACKAGES += \
+    OpenEUICC

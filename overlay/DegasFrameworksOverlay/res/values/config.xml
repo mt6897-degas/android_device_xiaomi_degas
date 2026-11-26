@@ -790,4 +790,17 @@
     <!-- Spatial audio: head tracking is on by default for a newly connected device,
          as in the stock overlay (AospFrameworkResOverlay) -->
     <bool name="config_spatial_audio_head_tracking_enabled_default">true</bool>
+
+    <!-- eUICC (eSIM) slot & device capabilities (from stock HyperOS OS3.0.306.0) -->
+    <string-array name="config_telephonyEuiccDeviceCapabilities" translatable="false">
+        <item>gsm,9</item>
+        <item>utran,9</item>
+        <item>eutran,15</item>
+        <item>nrepc,16</item>
+        <item>nr5gc,16</item>
+        <item>eutran5gc,16</item>
+    </string-array>
+    <integer-array name="non_removable_euicc_slots">
+        <item>1</item>
+    </integer-array>
 </resources>
