@@ -94,3 +94,12 @@ apply_one "frameworks/base" \
 
 apply_one "packages/apps/Launcher3" \
     "packages_apps_Launcher3/0001-Launcher3-do-not-blur-the-wallpaper-during-a-drag.patch"
+
+apply_one "hardware/mediatek" \
+    "hardware_mediatek/0002-usb-gadget-do-not-link-nonexistent-mass_storage-on-mtp.patch"
+
+apply_one "frameworks/opt/telephony" \
+    "frameworks_opt_telephony/0001-UiccPort-set-isEs10-for-ISD-R-logical-channel-APDUs.patch"
+
+apply_one "packages/apps/Settings" \
+    "packages_apps_Settings/0002-FingerprintEnrollEnrolling-keep-skip-button-off-low-udfps.patch"

@@ -1,0 +1,51 @@
+diff --git a/src/com/android/settings/biometrics/fingerprint/FingerprintEnrollEnrolling.java b/src/com/android/settings/biometrics/fingerprint/FingerprintEnrollEnrolling.java
+index d438484..12417de 100644
+--- a/src/com/android/settings/biometrics/fingerprint/FingerprintEnrollEnrolling.java
++++ b/src/com/android/settings/biometrics/fingerprint/FingerprintEnrollEnrolling.java
+@@ -307,22 +307,34 @@ public class FingerprintEnrollEnrolling extends BiometricsEnrollEnrolling {
+ 
+         if (mCanAssumeUdfps) {
+             final LinearLayout buttonContainer = mFooterBarMixin.getButtonContainer();
+-            if (buttonContainer != null) {
+-                buttonContainer.post(() -> {
+-                    if (startAlign) {
+-                        // Keep the button clear of low-positioned sensors.
+-                        buttonContainer.setBackgroundColor(Color.TRANSPARENT);
+-                        buttonContainer.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+-                        final Button secondaryButtonView =
+-                                mFooterBarMixin.getSecondaryButtonView();
+-                        if (secondaryButtonView != null) {
+-                            final LayoutParams lp = secondaryButtonView.getLayoutParams();
++            if (buttonContainer != null && startAlign) {
++                final Runnable alignSkipButton = () -> {
++                    // Keep the button clear of low-positioned sensors even when GLIF Expressive
++                    // FooterBarMixin recalculates button widths.
++                    buttonContainer.setBackgroundColor(Color.TRANSPARENT);
++                    buttonContainer.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
++                    final Button secondaryButtonView =
++                            mFooterBarMixin.getSecondaryButtonView();
++                    if (secondaryButtonView != null) {
++                        final LayoutParams lp = secondaryButtonView.getLayoutParams();
++                        if (lp != null && lp.width != LayoutParams.WRAP_CONTENT) {
+                             lp.width = LayoutParams.WRAP_CONTENT;
+                             secondaryButtonView.setLayoutParams(lp);
+-                            secondaryButtonView.setMinHeight(0);
+                         }
++                        secondaryButtonView.setMinHeight(0);
+                     }
+-                });
++                };
++                buttonContainer.post(alignSkipButton);
++                final Button secondaryButtonView = mFooterBarMixin.getSecondaryButtonView();
++                if (secondaryButtonView != null) {
++                    secondaryButtonView.addOnLayoutChangeListener(
++                            (v, l, t, r, b, ol, ot, or_, ob) -> {
++                                final LayoutParams lp = v.getLayoutParams();
++                                if (lp != null && lp.width != LayoutParams.WRAP_CONTENT) {
++                                    buttonContainer.post(alignSkipButton);
++                                }
++                            });
++                }
+             }
+             // Keep the footer bar transparent so it doesn't overlap the UDFPS sensor.
+             mShouldSetFooterBarBackground = false;

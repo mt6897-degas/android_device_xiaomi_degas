@@ -1,0 +1,16 @@
+diff --git a/aidl/gadget/UsbGadget.cpp b/aidl/gadget/UsbGadget.cpp
+index 5bd5d5e..c4377a0 100644
+--- a/aidl/gadget/UsbGadget.cpp
++++ b/aidl/gadget/UsbGadget.cpp
+@@ -256,11 +256,6 @@ Status UsbGadget::setupFunctions(long functions, const shared_ptr<IUsbGadgetCall
+         if (linkFunction("ncm.gs9", i++)) return Status::ERROR;
+     }
+ 
+-    if ((functions & GadgetFunction::MTP) != 0) {
+-        ALOGI("setCurrentUsbFunctions mtp");
+-        if (linkFunction("mass_storage.0", i++)) return Status::ERROR;
+-    }
+-
+     // Pull up the gadget right away when there are no ffs functions.
+     if (!ffsEnabled) {
+         if (!WriteStringToFile(kGadgetName, PULLUP_PATH)) return Status::ERROR;

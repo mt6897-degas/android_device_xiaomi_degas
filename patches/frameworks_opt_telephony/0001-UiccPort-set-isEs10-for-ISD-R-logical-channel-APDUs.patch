@@ -1,0 +1,34 @@
+diff --git a/src/java/com/android/internal/telephony/uicc/UiccPort.java b/src/java/com/android/internal/telephony/uicc/UiccPort.java
+index 3f59582..48d728e 100644
+--- a/src/java/com/android/internal/telephony/uicc/UiccPort.java
++++ b/src/java/com/android/internal/telephony/uicc/UiccPort.java
+@@ -235,10 +235,19 @@ public class UiccPort {
+      * @deprecated Please use
+      * {@link UiccProfile#iccCloseLogicalChannel(int, boolean, Message)} instead.
+      */
++    private boolean isEs10Channel(int channel) {
++        OpenLogicalChannelRecord record = getOpenLogicalChannelRecord(channel);
++        if (record == null || record.mRequest == null || record.mRequest.aid == null) {
++            return false;
++        }
++        return record.mRequest.aid.toUpperCase(java.util.Locale.ROOT)
++                .startsWith("A0000005591010");
++    }
++
+     @Deprecated
+     public void iccCloseLogicalChannel(int channel, Message response) {
+         if (mUiccProfile != null) {
+-            mUiccProfile.iccCloseLogicalChannel(channel, false /*isEs10*/, response);
++            mUiccProfile.iccCloseLogicalChannel(channel, isEs10Channel(channel), response);
+         } else {
+             loge("iccCloseLogicalChannel Failed!");
+         }
+@@ -255,7 +264,7 @@ public class UiccPort {
+             int p1, int p2, int p3, String data, Message response) {
+         if (mUiccProfile != null) {
+             mUiccProfile.iccTransmitApduLogicalChannel(channel, cla, command, p1, p2, p3,
+-                    data, false /*isEs10Command*/, response);
++                    data, isEs10Channel(channel), response);
+         } else {
+             loge("iccTransmitApduLogicalChannel Failed!");
+         }
