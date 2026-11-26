@@ -1,8 +1,8 @@
 diff --git a/src/java/com/android/internal/telephony/uicc/UiccPort.java b/src/java/com/android/internal/telephony/uicc/UiccPort.java
-index 3f59582..48d728e 100644
+index 3f59582..1cdad7a 100644
 --- a/src/java/com/android/internal/telephony/uicc/UiccPort.java
 +++ b/src/java/com/android/internal/telephony/uicc/UiccPort.java
-@@ -235,10 +235,19 @@ public class UiccPort {
+@@ -235,10 +235,64 @@ public class UiccPort {
       * @deprecated Please use
       * {@link UiccProfile#iccCloseLogicalChannel(int, boolean, Message)} instead.
       */
@@ -15,6 +15,51 @@ index 3f59582..48d728e 100644
 +                .startsWith("A0000005591010");
 +    }
 +
++    private String maybeAddMepA1TargetPort(String data) {
++        if (data == null || data.length() < 8
++                || !data.regionMatches(true, 0, "BF31", 0, 4)) {
++            return data;
++        }
++        IccSlotStatus.MultipleEnabledProfilesMode mepMode = null;
++        if (this instanceof com.android.internal.telephony.uicc.euicc.EuiccPort) {
++            mepMode = ((com.android.internal.telephony.uicc.euicc.EuiccPort) this)
++                    .mSupportedMepMode;
++        }
++        if (mepMode == null || !mepMode.isMepA1Mode()) {
++            mepMode = UiccController.getInstance().getSupportedMepMode(mPhysicalSlotIndex);
++        }
++        if (mepMode == null || !mepMode.isMepA1Mode()) {
++            return data;
++        }
++        try {
++            com.android.internal.telephony.uicc.asn1.Asn1Decoder decoder =
++                    new com.android.internal.telephony.uicc.asn1.Asn1Decoder(
++                            IccUtils.hexStringToBytes(data));
++            if (!decoder.hasNextNode()) {
++                return data;
++            }
++            com.android.internal.telephony.uicc.asn1.Asn1Node root = decoder.nextNode();
++            if (root.getTag() != 0xBF31 || root.hasChild(0x82)) {
++                return data;
++            }
++            com.android.internal.telephony.uicc.asn1.Asn1Node.Builder builder =
++                    com.android.internal.telephony.uicc.asn1.Asn1Node.newBuilder(0xBF31);
++            for (com.android.internal.telephony.uicc.asn1.Asn1Node child : root.getChildren()) {
++                builder.addChild(child);
++            }
++            int targetPort = PortUtils.convertToHalPortIndex(mepMode, mPortIdx);
++            builder.addChildAsInteger(0x82, targetPort);
++            String patched = builder.build().toHex();
++            log("maybeAddMepA1TargetPort: injected targetPort=" + targetPort
++                    + " for slot=" + mPhysicalSlotIndex + " port=" + mPortIdx);
++            return patched;
++        } catch (com.android.internal.telephony.uicc.asn1.InvalidAsn1DataException
++                | IllegalArgumentException e) {
++            loge("maybeAddMepA1TargetPort failed: " + e);
++            return data;
++        }
++    }
++
      @Deprecated
      public void iccCloseLogicalChannel(int channel, Message response) {
          if (mUiccProfile != null) {
@@ -23,12 +68,21 @@ index 3f59582..48d728e 100644
          } else {
              loge("iccCloseLogicalChannel Failed!");
          }
-@@ -255,7 +264,7 @@ public class UiccPort {
+@@ -254,8 +308,16 @@ public class UiccPort {
+     public void iccTransmitApduLogicalChannel(int channel, int cla, int command,
              int p1, int p2, int p3, String data, Message response) {
          if (mUiccProfile != null) {
++            boolean isEs10 = isEs10Channel(channel);
++            if (isEs10 && command == 0xE2 && p1 == 0x91 && p2 == 0x00 && data != null) {
++                String patched = maybeAddMepA1TargetPort(data);
++                if (patched != data) {
++                    data = patched;
++                    p3 = data.length() / 2;
++                }
++            }
              mUiccProfile.iccTransmitApduLogicalChannel(channel, cla, command, p1, p2, p3,
 -                    data, false /*isEs10Command*/, response);
-+                    data, isEs10Channel(channel), response);
++                    data, isEs10, response);
          } else {
              loge("iccTransmitApduLogicalChannel Failed!");
          }
