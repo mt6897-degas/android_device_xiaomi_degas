@@ -129,10 +129,12 @@ PRODUCT_VENDOR_LINKER_CONFIG_FRAGMENTS += \
 PRODUCT_PACKAGES += \
     fastbootd
 
-# Face unlock: libmiface links libcamera2ndk_vendor, whose AIDL dependencies live in
-# an APEX on stock and are not extractable, so build it from source instead.
+# Face unlock: stock libmiface expects the VNDK v34 native_handle_t ABI from
+# prebuilt libcamera2ndk_vendor, which links cameraservice AIDL V1 NDK libs.
 PRODUCT_PACKAGES += \
-    libcamera2ndk_vendor
+    android.frameworks.cameraservice.common-V1-ndk \
+    android.frameworks.cameraservice.device-V1-ndk \
+    android.frameworks.cameraservice.service-V1-ndk
 
 
 # Fingerprint

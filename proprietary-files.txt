@@ -949,6 +949,7 @@ vendor/lib64/vendor.xiaomi.hardware.fx.tunnel-V1-ndk.so
 
 # Face unlock (Xiaomi mifaced, android.hardware.biometrics.face AIDL v3)
 vendor/bin/hw/mifaced
+vendor/lib64/libcamera2ndk_vendor.so:vendor/lib64/libcamera2ndk_vendor-v34.so;FIX_SONAME
 vendor/lib64/libmiface.so
 vendor/etc/init/miface.rc
 vendor/etc/init/miface_start_with_system_boot.rc
