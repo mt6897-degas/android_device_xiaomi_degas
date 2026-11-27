@@ -19,6 +19,7 @@ vendor.rild.libpath=mtk-ril.so
 # them cuts the daemon's CPU roughly in half while the screen is off.
 # Re-enable any of them at runtime with `setprop log.tag.<tag> V`.
 log.tag.HfManager=S
+log.tag.HfLooper=S
 log.tag.libsensor-displayInfoManager=S
 log.tag.libsensor-displayalgo=S
 log.tag.libsensor-frameBufferManager=S

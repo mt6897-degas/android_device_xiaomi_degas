@@ -9,3 +9,6 @@ add_service(mtk_hal_camera, vendor_hal_camera_bgservice)
 
 get_prop(mtk_hal_camera, camera_config_prop)
 get_prop(mtk_hal_camera, vendor_thermal_prop)
+
+# 3A_Thread probes legacy default_prop entries; silence harmless denial spam
+dontaudit mtk_hal_camera default_prop:file { getattr map open read };
